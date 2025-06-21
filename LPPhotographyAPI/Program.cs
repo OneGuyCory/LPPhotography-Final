@@ -10,10 +10,12 @@ var serverVersion = new MySqlServerVersion(new Version(8, 0, 34));
 builder.Services.AddControllers();
 builder.Services.AddDbContext<LpPhotoDbContext>(dbContextOptions =>
     dbContextOptions.UseMySql(connectionString, serverVersion));
+builder.Services.AddCors();
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
+app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:3000", "https://localhost:3000"));
 app.MapControllers();
 
 using var scope = app.Services.CreateScope();

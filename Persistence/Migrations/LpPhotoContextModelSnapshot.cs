@@ -46,6 +46,59 @@ namespace Persistence.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Galleries");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+                            Category = "Weddings",
+                            CreatedAt = new DateTime(2025, 6, 21, 21, 51, 14, 967, DateTimeKind.Utc).AddTicks(9723),
+                            IsPrivate = false
+                        });
+                });
+
+            modelBuilder.Entity("Domain.Photo", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<string>("Caption")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("GalleryId")
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<string>("Url")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GalleryId");
+
+                    b.ToTable("Photos");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "11111111-1111-1111-1111-111111111111",
+                            GalleryId = "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+                            Url = "https://res.cloudinary.com/dxqrgfgqo/image/upload/v1744866765/LPPhotography/d4o1t9a2jct1qkx4feic.jpg"
+                        });
+                });
+
+            modelBuilder.Entity("Domain.Photo", b =>
+                {
+                    b.HasOne("Domain.Gallery", "Gallery")
+                        .WithMany("Photos")
+                        .HasForeignKey("GalleryId");
+
+                    b.Navigation("Gallery");
+                });
+
+            modelBuilder.Entity("Domain.Gallery", b =>
+                {
+                    b.Navigation("Photos");
                 });
 #pragma warning restore 612, 618
         }

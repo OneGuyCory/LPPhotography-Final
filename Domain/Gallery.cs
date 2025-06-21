@@ -13,6 +13,6 @@ public class Gallery
     public bool? AccessCode { get; set; } // does it have an access code for client gallery
 
     public DateTime? CreatedAt { get; set; } = DateTime.UtcNow;
-    
-    //public List<Photo> Photos { get; set; }
+
+    public List<Photo> Photos { get; set; } = [];
 }
