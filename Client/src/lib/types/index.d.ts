@@ -6,3 +6,10 @@
     accessCode: boolean;
     createdAt: string;
 }
+
+type ContactFormData = {
+    name: string;
+    email: string;
+    service: string;
+    message: string;
+}
