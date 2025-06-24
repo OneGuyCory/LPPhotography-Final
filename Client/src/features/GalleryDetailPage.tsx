@@ -26,6 +26,7 @@ const mockGalleryPhotos: { [key: string]: Photo[] } = {
 };
 
 const GalleryDetailPage: React.FC = () => {
+    const [selectedPhoto, setSelectedPhoto] = useState<Photo | null>(null);
     const { id } = useParams(); // id will be something like 'weddings' or 'portraits'
     const [photos, setPhotos] = useState<Photo[]>([]);
 
@@ -47,14 +48,38 @@ const GalleryDetailPage: React.FC = () => {
                         <div key={photo.id} className="rounded overflow-hidden shadow">
                             <img
                                 src={photo.url}
-                                alt={photo.caption || "Gallery Photo"}
-                                className="w-full h-64 object-cover"
+                                alt={photo.caption || "Photo"}
+                                onClick={() => setSelectedPhoto(photo)}
+                                className="cursor-pointer w-full h-48 object-cover rounded hover:opacity-80 transition"
                             />
                             {photo.caption && (
                                 <div className="p-2 bg-white text-sm text-center">{photo.caption}</div>
                             )}
                         </div>
                     ))}
+                </div>
+            )}
+
+            {/* 📸 Modal to show selected photo full screen */}
+            {selectedPhoto && (
+                <div className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50">
+                    <div className="relative max-w-4xl w-full mx-4">
+                        <button
+                            onClick={() => setSelectedPhoto(null)}
+                            className="absolute top-4 right-4 text-white text-3xl font-bold hover:text-red-300 transition"
+                            aria-label="Close"
+                        >
+                            &times;
+                        </button>
+                        <img
+                            src={selectedPhoto.url}
+                            alt={selectedPhoto.caption || "Full View"}
+                            className="w-full max-h-[80vh] object-contain rounded shadow-lg"
+                        />
+                        {selectedPhoto.caption && (
+                            <p className="text-white mt-4 text-center text-lg">{selectedPhoto.caption}</p>
+                        )}
+                    </div>
                 </div>
             )}
         </div>

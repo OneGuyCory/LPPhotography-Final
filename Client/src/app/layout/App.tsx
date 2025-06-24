@@ -6,6 +6,7 @@ import ContactPage from "../../features/ContactPage"
 import GalleryPage from "../../features/GalleryPage"
 import GalleryDetailPage from "../../features/GalleryDetailPage"
 import LoginPage from "../../features/LoginPage"
+import AdminPage from "../../features/AdminPage"
 
 const App: React.FC = () => {
     return (
@@ -18,6 +19,7 @@ const App: React.FC = () => {
                     <Route path="/galleries" element={<GalleryPage />} />
                     <Route path="/galleries/:id" element={<GalleryDetailPage />} />
                     <Route path="/login" element={<LoginPage />} />
+                    <Route path="/admin" element={<AdminPage />} />
                 </Routes>
             </main>
             <Footer />

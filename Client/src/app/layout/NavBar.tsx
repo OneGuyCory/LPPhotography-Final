@@ -1,4 +1,5 @@
 ﻿import React, { useState } from "react";
+import {Link} from "react-router";
 
 const Navbar: React.FC = () => {
     const [open, setOpen] = useState<boolean>(false);
@@ -11,7 +12,9 @@ const Navbar: React.FC = () => {
             }}
         >
             <div className="flex items-center justify-between">
-                <h1 className="text-xl font-bold">LP Photography</h1>
+                <Link to="/" className="text-xl font-bold">
+                    LP Photography
+                </Link>
                 <button className="md:hidden" onClick={() => setOpen(!open)}>
                     ☰
                 </button>

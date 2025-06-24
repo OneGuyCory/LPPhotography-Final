@@ -1,15 +1,4 @@
-﻿import React from "react";
-
-const HomePage: React.FC = () => {
-    const sampleImages: string[] = [
-        "sample1",
-        "sample2",
-        "sample3",
-        "sample4",
-        "sample5",
-        "sample6"
-    ];
-
+﻿export default function HomePage() {
     return (
         <div className="font-sans text-gray-900">
 
@@ -20,23 +9,18 @@ const HomePage: React.FC = () => {
             >
                 <div className="bg-black/60 p-6 rounded-xl">
                     <h2 className="text-4xl md:text-5xl font-bold mb-2">Capturing Life's Moments</h2>
-                    <p className="text-lg md:text-xl mb-4">
-                        Weddings * Portraits * Events * Landscapes
-                    </p>
-                    <a
-                        href="#contact"
-                        className="bg-white text-black px-6 py-2 rounded hover:bg-gray-200 transition"
-                    >
+                    <p className="text-lg md:text-xl mb-4">Weddings * Portraits * Events * Landscapes</p>
+                    <a href="#contact" className="bg-white text-black px-6 py-2 rounded hover:bg-gray-200 transition">
                         Book a Session
                     </a>
                 </div>
             </section>
 
-            {/* Gallery Section */}
+            {/* Featured Gallery Section */}
             <section id="galleries" className="p-8">
                 <h3 className="text-3xl font-bold text-center mb-6">Featured Work</h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                    {sampleImages.map((img, i) => (
+                    {["sample1", "sample2", "sample3", "sample4", "sample5", "sample6"].map((img, i) => (
                         <div key={i} className="rounded overflow-hidden shadow-lg">
                             <img
                                 src={`https://res.cloudinary.com/YOUR_CLOUD_NAME/image/upload/${img}.jpg`}
@@ -48,19 +32,52 @@ const HomePage: React.FC = () => {
                 </div>
             </section>
 
-            {/* Contact Section */}
+            <section id="pricing" className="bg-white p-8">
+                <h3 className="text-3xl font-bold text-center mb-8">Pricing</h3>
+                <div className="max-w-5xl mx-auto grid gap-6 md:grid-cols-3">
+
+                    <div className="border rounded-lg p-6 shadow hover:shadow-lg transition">
+                        <h4 className="text-xl font-semibold mb-2 text-center">Portrait Session</h4>
+                        <p className="text-center text-gray-700 mb-4">$150</p>
+                        <ul className="text-sm text-gray-600 space-y-2">
+                            <li>✔ 1 hour shoot</li>
+                            <li>✔ 10 edited photos</li>
+                            <li>✔ Online gallery delivery</li>
+                        </ul>
+                    </div>
+
+                    <div className="border rounded-lg p-6 shadow hover:shadow-lg transition">
+                        <h4 className="text-xl font-semibold mb-2 text-center">Wedding Package</h4>
+                        <p className="text-center text-gray-700 mb-4">$1200</p>
+                        <ul className="text-sm text-gray-600 space-y-2">
+                            <li>✔ 8 hours coverage</li>
+                            <li>✔ 150+ edited photos</li>
+                            <li>✔ Full-day event documentation</li>
+                        </ul>
+                    </div>
+
+                    <div className="border rounded-lg p-6 shadow hover:shadow-lg transition">
+                        <h4 className="text-xl font-semibold mb-2 text-center">Event Coverage</h4>
+                        <p className="text-center text-gray-700 mb-4">$300</p>
+                        <ul className="text-sm text-gray-600 space-y-2">
+                            <li>✔ 3 hours coverage</li>
+                            <li>✔ 50 edited photos</li>
+                            <li>✔ Great for parties & ceremonies</li>
+                        </ul>
+                    </div>
+
+                </div>
+            </section>
+
+
+            {/* Contact CTA */}
             <section id="contact" className="bg-gray-100 p-8 text-center">
                 <h3 className="text-2xl font-bold mb-4">Let's Work Together</h3>
                 <p className="mb-4">Have questions or want to book a shoot? Reach out!</p>
-                <a
-                    href="/contact"
-                    className="bg-black text-white px-6 py-3 rounded hover:bg-gray-800 transition"
-                >
+                <a href="/contact" className="bg-black text-white px-6 py-3 rounded hover:bg-gray-800 transition">
                     Contact Me
                 </a>
             </section>
         </div>
     );
-};
-
-export default HomePage;
+}
