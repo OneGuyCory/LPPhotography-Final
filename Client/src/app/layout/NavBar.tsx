@@ -6,7 +6,7 @@ const Navbar: React.FC = () => {
 
     return (
         <nav
-            className="text-white p-4"
+            className="sticky top-0 text-white p-4"
             style={{
                 background: `linear-gradient(to right, #2a4c65 0%, #fd8a93 69%, #f9b294 89%)`,
             }}

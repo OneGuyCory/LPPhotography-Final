@@ -1,6 +1,6 @@
 ﻿namespace Domain;
 
-public class Contact
+public class ContactMessage
 {
     
 }

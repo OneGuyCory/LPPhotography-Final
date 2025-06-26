@@ -4,11 +4,11 @@ public class Photo
 {
     public string Id { get; set; } = Guid.NewGuid().ToString();
     
-    public string Url { get; set; }
+    public required string Url { get; set; } // URL from cloudinary
     
     public string? Caption { get; set; }
     
-    public string? GalleryId { get; set; }
-    
-    public Gallery Gallery { get; set; }
+    public required string GalleryId { get; set; }
+
+    public Gallery Gallery { get; set; } = null!; // setting up via EF relationship
 }

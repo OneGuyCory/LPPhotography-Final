@@ -8,5 +8,5 @@ public class LpPhotoDbContext(DbContextOptions options) : IdentityDbContext<User
 {
     public required DbSet<Gallery> Galleries { get; set; }
     public required DbSet<Photo> Photos { get; set; }
-    
+    public DbSet<User> Users { get; set; }
 }
