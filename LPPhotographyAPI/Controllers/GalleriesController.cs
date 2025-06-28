@@ -1,4 +1,5 @@
-﻿using Domain;
+﻿using System.Security.Claims;
+using Domain;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -12,6 +13,7 @@ public class GalleriesController(LpPhotoDbContext context) : BaseApiController
     public async Task<ActionResult<List<Gallery>>> GetGalleries()
     {
         return await context.Galleries
+            .Where(g => !g.IsPrivate)
             .Include(g => g.Photos) // EF to load photos in gallery as well
             .ToListAsync(); //returns as list
     }
@@ -40,7 +42,7 @@ public class GalleriesController(LpPhotoDbContext context) : BaseApiController
     
     //GET: photos in gallery '/api/galleries/{id}/photos
     [HttpGet("{id}/photos")]
-    public async Task<ActionResult<IEnumerable<Photo>>> DisplayGalleryPhotos(string id)
+    public async Task<ActionResult<IEnumerable<Photo>>> GetPhotosByGalleryId(string id)
     {
         var gallery = await context.Galleries
             .Include(g => g.Photos)
@@ -66,7 +68,7 @@ public class GalleriesController(LpPhotoDbContext context) : BaseApiController
     }
     
     //DELETE: /api/galleries/{id}
-    [HttpPut("{id}")]
+    [HttpDelete("{id}")]
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> DeleteGallery(string id)
     {
@@ -82,5 +84,31 @@ public class GalleriesController(LpPhotoDbContext context) : BaseApiController
         
         return NoContent();
     }
+    
+    [HttpGet("client")]
+    [Authorize(Roles = "Client")]
+    public async Task<ActionResult<Gallery>> GetClientGallery()
+    {
+        var email = User.Identity?.Name;
+        var roles = User.Claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value);
+        
+        Console.WriteLine("Authenticated user:", email);
+        Console.WriteLine("User roles:", string.Join(", ", roles));
+
+        if (string.IsNullOrWhiteSpace(email))
+            return Unauthorized("No authenticated user");
+
+        var gallery = await context.Galleries
+            .Include(g => g.Photos)
+            .FirstOrDefaultAsync(g =>
+                g.IsPrivate &&
+                g.ClientEmail == email);
+
+        if (gallery == null)
+            return NotFound("No gallery found for this client");
+
+        return Ok(gallery);
+    }
+
     
 }

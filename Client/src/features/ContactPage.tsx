@@ -1,4 +1,4 @@
-﻿import React, { useState } from "react";
+﻿import { useState } from "react";
 
 
 const ContactPage: React.FC = () => {
@@ -18,8 +18,19 @@ const ContactPage: React.FC = () => {
         e.preventDefault();
 
         // Placeholder: later replace with POST to API
-        console.log("Contact submitted:", formData);
-        alert("Thanks for reaching out! We'll be in touch soon.");
+        fetch("https://localhost:5001/api/ContactMessage", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(formData),
+        })
+            .then((res) => {
+                if (res.ok) {
+                    alert("Message sent!");
+                } else {
+                    alert("Failed to send message.");
+                }
+            });
+
 
         // Optional: reset form
         setFormData({ name: "", email: "", service: "", message: "" });

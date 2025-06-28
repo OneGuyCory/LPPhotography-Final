@@ -1,4 +1,5 @@
 ﻿using Domain;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
@@ -14,7 +15,8 @@ public class PhotosController(LpPhotoDbContext context) : BaseApiController
             .Where(p => p.GalleryId == galleryId)
             .ToListAsync();
         
-        var galleryExists = await context.Photos.AnyAsync(g => g.GalleryId == galleryId);
+        var galleryExists = await context.Galleries.AnyAsync(g => g.Id == galleryId);
+
 
         if (!galleryExists)
         {
@@ -24,9 +26,10 @@ public class PhotosController(LpPhotoDbContext context) : BaseApiController
     }
 
     [HttpPost]
+    [Authorize(Roles = "Admin")]
     public async Task<ActionResult<Photo>> PostPhoto(Photo newPhoto)
     {
-        var galleryExists = await context.Photos.AnyAsync(g => g.GalleryId == newPhoto.GalleryId);
+        var galleryExists = await context.Galleries.AnyAsync(g => g.Id == newPhoto.GalleryId);
         if (!galleryExists)
         {
             return BadRequest();
@@ -52,6 +55,7 @@ public class PhotosController(LpPhotoDbContext context) : BaseApiController
     }
 
     [HttpDelete("{id}")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> DeletePhoto(string id)
     {
         var photo = await context.Photos.FindAsync(id);
@@ -64,10 +68,12 @@ public class PhotosController(LpPhotoDbContext context) : BaseApiController
         context.Photos.Remove(photo);
         await context.SaveChangesAsync();
         
-        return NoContent();
+        return Ok("Photo deleted successfully");
+
     }
 
     [HttpPut("{id}")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> UpdatePhoto(string id, Photo updatedPhoto)
     {
         if (id != updatedPhoto.Id)

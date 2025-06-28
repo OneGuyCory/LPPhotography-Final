@@ -10,23 +10,23 @@ const sampleGalleries: GalleryItem[] = [
     {
         id: "weddings",
         title: "Weddings",
-        coverImageUrl: "https://res.cloudinary.com/YOUR_CLOUD_NAME/image/upload/weddings_cover.jpg"
+        coverImageUrl: "https://res.cloudinary.com/dxqrgfgqo/image/upload/v1751045172/IMG_3755_ml9gwq.jpg"
     },
     {
         id: "portraits",
         title: "Portraits",
-        coverImageUrl: "https://res.cloudinary.com/YOUR_CLOUD_NAME/image/upload/portraits_cover.jpg"
+        coverImageUrl: "https://res.cloudinary.com/dxqrgfgqo/image/upload/v1751045337/IMG_8765_pmdofj.jpg"
     },
     {
         id: "events",
         title: "Events",
-        coverImageUrl: "https://res.cloudinary.com/YOUR_CLOUD_NAME/image/upload/events_cover.jpg"
+        coverImageUrl: "https://res.cloudinary.com/dxqrgfgqo/image/upload/v1751045268/IMG_0037_fd5zdv.jpg"
     },
     {
         id: "landscapes",
         title: "Landscapes",
-        coverImageUrl: "https://res.cloudinary.com/YOUR_CLOUD_NAME/image/upload/landscapes_cover.jpg"
-    }
+        coverImageUrl: "https://res.cloudinary.com/dxqrgfgqo/image/upload/v1751045406/SunsetWheat_dnlhh4.jpg"
+    },
 ];
 
 const GalleryPage: React.FC = () => {
@@ -47,7 +47,7 @@ const GalleryPage: React.FC = () => {
                                 className="w-full h-48 object-cover"
                             />
                             <div className="p-4 bg-white">
-                                <h3 className="text-lg font-semibold text-gray-900">{gallery.title}</h3>
+                                <h3 className="text-lg font-semibold text-gray-900 text-center">{gallery.title}</h3>
                             </div>
                         </a>
                     ))}

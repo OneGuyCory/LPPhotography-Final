@@ -25,6 +25,8 @@ const mockGalleryPhotos: { [key: string]: Photo[] } = {
     ]
 };
 
+
+
 const GalleryDetailPage: React.FC = () => {
     const [selectedPhoto, setSelectedPhoto] = useState<Photo | null>(null);
     const { id } = useParams(); // id will be something like 'weddings' or 'portraits'

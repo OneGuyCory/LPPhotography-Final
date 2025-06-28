@@ -2,20 +2,6 @@
 import  { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 
-interface Gallery {
-    id: string;
-    title: string;
-    isPrivate: boolean;
-    accessCode?: string;
-}
-
-interface Photo {
-    id: string;
-    url: string;
-    caption?: string;
-    galleryId: string;
-}
-
 export default function AdminPage() {
     const [uploading, setUploading] = useState(false);
     const [uploadUrl, setUploadUrl] = useState("");
@@ -25,6 +11,10 @@ export default function AdminPage() {
     const [selectedGalleryId, setSelectedGalleryId] = useState<string>("");
     const [photos, setPhotos] = useState<Photo[]>([]);
     const [newGalleryTitle, setNewGalleryTitle] = useState("");
+    const [isPrivate, setIsPrivate] = useState(false);
+    const [clientEmail, setClientEmail] = useState("");
+    const [accessCode, setAccessCode] = useState("");
+
 
     useEffect(() => {
         const role = localStorage.getItem("userRole");
@@ -55,10 +45,13 @@ export default function AdminPage() {
     const handleCreateGallery = () => {
         const newGallery = {
             title: newGalleryTitle,
-            isPrivate: false,
+            isPrivate,
+            clientEmail: isPrivate ? clientEmail : null,
+            accessCode: isPrivate ? accessCode : null,
+            category: "Custom", // optional: set default category
         };
 
-        fetch("/api/galleries", {
+        fetch("https://localhost:5001/api/galleries", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(newGallery),
@@ -67,8 +60,12 @@ export default function AdminPage() {
             .then((gallery) => {
                 setGalleries((prev) => [...prev, gallery]);
                 setNewGalleryTitle("");
+                setIsPrivate(false);
+                setClientEmail("");
+                setAccessCode("");
             });
     };
+
 
     const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
@@ -126,13 +123,47 @@ export default function AdminPage() {
                     placeholder="Gallery Title"
                     className="p-2 border border-gray-300 rounded mr-2"
                 />
+
+                <div className="flex items-center space-x-2 mb-2">
+                    <input
+                        id="privateGalleryCheckbox"
+                        type="checkbox"
+                        checked={isPrivate}
+                        onChange={() => setIsPrivate(!isPrivate)}
+                    />
+                    <label htmlFor="privateGalleryCheckbox" className="cursor-pointer">
+                        Private Gallery
+                    </label>
+                </div>
+
+
+                {isPrivate && (
+                    <>
+                        <input
+                            type="email"
+                            value={clientEmail}
+                            onChange={(e) => setClientEmail(e.target.value)}
+                            placeholder="Client Email"
+                            className="p-2 border border-gray-300 rounded mr-2"
+                        />
+                        <input
+                            type="text"
+                            value={accessCode}
+                            onChange={(e) => setAccessCode(e.target.value)}
+                            placeholder="Access Code"
+                            className="p-2 border border-gray-300 rounded mr-2"
+                        />
+                    </>
+                )}
+
                 <button
                     onClick={handleCreateGallery}
                     className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
                 >
-                    Create
+                    Create Gallery
                 </button>
             </div>
+
 
             <div className="mb-6">
                 <h2 className="text-xl font-semibold mb-2">Select Gallery</h2>
@@ -143,11 +174,17 @@ export default function AdminPage() {
                 >
                     <option value="">-- Select --</option>
                     {galleries.map((gallery) => (
-                        <option key={gallery.id} value={gallery.id}>
+                        <option key={gallery.id} value={gallery.category}>
                             {gallery.title}
                         </option>
                     ))}
                 </select>
+
+                {galleries.length === 0 && (
+                    <p className="text-gray-500 mt-2">No galleries found. Create one above to get started.</p>
+                )}
+
+
                 {selectedGalleryId && (
                     <div className="mb-10 mt-6 border-t pt-6">
                         <h3 className="text-xl font-semibold mb-4">Upload a Photo to This Gallery</h3>

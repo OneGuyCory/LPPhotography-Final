@@ -1,8 +1,24 @@
-﻿import React, { useState } from "react";
-import {Link} from "react-router";
+﻿import React, { useEffect, useState } from "react";
+import { Link } from "react-router"; // make sure you're using react-router-dom!
 
 const Navbar: React.FC = () => {
     const [open, setOpen] = useState<boolean>(false);
+    const [userRole, setUserRole] = useState<string | null>(null);
+
+    useEffect(() => {
+        setUserRole(localStorage.getItem("userRole"));
+    }, []);
+
+    const logout = async () => {
+        await fetch("https://localhost:5001/api/users/logout", {
+            method: "POST",
+            credentials: "include",
+        });
+
+        localStorage.removeItem("userRole");
+        localStorage.removeItem("userEmail");
+        window.location.href = "/";
+    };
 
     return (
         <nav
@@ -19,19 +35,43 @@ const Navbar: React.FC = () => {
                     ☰
                 </button>
                 <ul className="hidden md:flex space-x-6">
-                    <li><a href="/">Home</a></li>
-                    <li><a href="/galleries">Galleries</a></li>
-                    <li><a href="/contact">Contact</a></li>
-                    <li><a href="/login">Login</a></li>
+                    <li><Link to="/">Home</Link></li>
+                    <li><Link to="/galleries">Galleries</Link></li>
+                    <li><Link to="/contact">Contact</Link></li>
+
+                    {userRole === "Admin" && <li><Link to="/admin">Admin</Link></li>}
+                    {userRole === "Client" && <li><Link to="/client-gallery">My Gallery</Link></li>}
+
+                    {userRole ? (
+                        <li>
+                            <button onClick={logout} className="hover:underline">
+                                Logout
+                            </button>
+                        </li>
+                    ) : (
+                        <li><Link to="/login">Login</Link></li>
+                    )}
                 </ul>
             </div>
 
             {open && (
                 <ul className="flex flex-col md:hidden mt-2 space-y-2">
-                    <li><a href="/">Home</a></li>
-                    <li><a href="/galleries">Galleries</a></li>
-                    <li><a href="/contact">Contact</a></li>
-                    <li><a href="/login">Login</a></li>
+                    <li><Link to="/">Home</Link></li>
+                    <li><Link to="/galleries">Galleries</Link></li>
+                    <li><Link to="/contact">Contact</Link></li>
+
+                    {userRole === "Admin" && <li><Link to="/admin">Admin</Link></li>}
+                    {userRole === "Client" && <li><Link to="/client-gallery">My Gallery</Link></li>}
+
+                    {userRole ? (
+                        <li>
+                            <button onClick={logout} className="hover:underline text-left">
+                                Logout
+                            </button>
+                        </li>
+                    ) : (
+                        <li><Link to="/login">Login</Link></li>
+                    )}
                 </ul>
             )}
         </nav>

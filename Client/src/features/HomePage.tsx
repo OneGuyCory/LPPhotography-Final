@@ -1,6 +1,6 @@
 ﻿export default function HomePage() {
     return (
-        <div className="font-sans text-gray-900">
+        <div className="font-sans  text-gray-900">
 
             {/* Hero */}
             <section

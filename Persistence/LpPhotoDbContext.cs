@@ -4,9 +4,27 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Persistence;
 
-public class LpPhotoDbContext(DbContextOptions options) : IdentityDbContext<User>(options)
+public class LpPhotoDbContext : IdentityDbContext<SiteUser>
 {
-    public required DbSet<Gallery> Galleries { get; set; }
-    public required DbSet<Photo> Photos { get; set; }
-    public DbSet<User> Users { get; set; }
+    public LpPhotoDbContext(DbContextOptions<LpPhotoDbContext> options)
+        : base(options)
+    {
+    }
+
+    public DbSet<Gallery> Galleries { get; set; } = null!;
+    public DbSet<Photo> Photos { get; set; } = null!;
+    // You do not need to declare DbSet<SiteUser> unless you're doing custom queries on users.
+    // The IdentityDbContext already gives you access via base.Users
+
+    protected override void OnModelCreating(ModelBuilder builder)
+    {
+        base.OnModelCreating(builder);
+
+        // Optional: Fluent API relationships (EF usually handles this by convention)
+        builder.Entity<Photo>()
+            .HasOne(p => p.Gallery)
+            .WithMany(g => g.Photos)
+            .HasForeignKey(p => p.GalleryId)
+            .OnDelete(DeleteBehavior.Cascade);
+    }
 }

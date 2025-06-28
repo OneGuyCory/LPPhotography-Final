@@ -11,8 +11,9 @@ public class Gallery
     public bool IsPrivate { get; set; } = false; //set to false so only need to make changes when doing client gallery
     
     public string? AccessCode { get; set; } // does it have an access code for client gallery
+    public string? ClientEmail { get; set; }
 
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow; // sets date on creation
 
-    public List<Photo> Photos { get; set; } = new();
+    public ICollection<Photo> Photos { get; set; } = new List<Photo>();
 }

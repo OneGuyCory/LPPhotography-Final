@@ -2,6 +2,7 @@ using Domain;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,12 +10,13 @@ var connectionString = builder.Configuration.GetConnectionString("MySql");
 var serverVersion = new MySqlServerVersion(new Version(8, 0, 34));
 
 // Add services to the container.
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options => { options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles; });
 builder.Services.AddDbContext<LpPhotoDbContext>(dbContextOptions =>
     dbContextOptions.UseMySql(connectionString, serverVersion));
 builder.Services.AddCors();
 
-builder.Services.AddIdentityApiEndpoints<User>(opt =>
+builder.Services.AddIdentityApiEndpoints<SiteUser>(opt =>
 {
     opt.User.RequireUniqueEmail = true;
 })
@@ -25,13 +27,13 @@ var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod()
-    .WithOrigins("http://localhost:3000", "https://localhost:3000"));
+    .WithOrigins("http://localhost:3000", "https://localhost:3000").AllowCredentials());
 
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-app.MapGroup("api").MapIdentityApi<User>();
+app.MapGroup("api").MapIdentityApi<SiteUser>();
 
 using var scope = app.Services.CreateScope();
 var services = scope.ServiceProvider;
@@ -39,7 +41,12 @@ var services = scope.ServiceProvider;
 try
 {
     var context = services.GetRequiredService<LpPhotoDbContext>();
+    var userManager = services.GetRequiredService<UserManager<SiteUser>>();
+    var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+    var loggerFactory = services.GetRequiredService<ILoggerFactory>();
     await context.Database.MigrateAsync();
+    
+    await DbInitializer.SeedRolesAndUsers(userManager, roleManager, loggerFactory, context);
 }
 catch (Exception ex)
 {

@@ -13,3 +13,17 @@ type ContactFormData = {
     service: string;
     message: string;
 }
+
+type Photo = {
+    id: string;
+    url: string;
+    caption?: string;
+    galleryId: string;
+}
+
+type Gallery = {
+    id: string;
+    title: string;
+    isPrivate: boolean;
+    accessCode?: string;
+}

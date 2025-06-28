@@ -7,6 +7,7 @@ import GalleryPage from "../../features/GalleryPage"
 import GalleryDetailPage from "../../features/GalleryDetailPage"
 import LoginPage from "../../features/LoginPage"
 import AdminPage from "../../features/AdminPage"
+import ClientGalleryPage from "../../features/ClientGalleryPage"
 
 const App: React.FC = () => {
     return (
@@ -20,6 +21,8 @@ const App: React.FC = () => {
                     <Route path="/galleries/:id" element={<GalleryDetailPage />} />
                     <Route path="/login" element={<LoginPage />} />
                     <Route path="/admin" element={<AdminPage />} />
+                    <Route path="/client-gallery" element={<ClientGalleryPage />} />
+
                 </Routes>
             </main>
             <Footer />
