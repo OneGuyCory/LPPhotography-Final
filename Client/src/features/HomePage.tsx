@@ -23,7 +23,7 @@
                     {["sample1", "sample2", "sample3", "sample4", "sample5", "sample6"].map((img, i) => (
                         <div key={i} className="rounded overflow-hidden shadow-lg">
                             <img
-                                src={`https://res.cloudinary.com/YOUR_CLOUD_NAME/image/upload/${img}.jpg`}
+                                src={`https://res.cloudinary.com/dxqrgfgqo/image/upload/${img}.jpg`}
                                 alt={`Sample ${i + 1}`}
                                 className="w-full h-48 object-cover"
                             />

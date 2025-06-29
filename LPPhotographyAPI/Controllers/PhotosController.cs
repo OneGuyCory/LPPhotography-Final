@@ -1,4 +1,5 @@
 ﻿using Domain;
+using LPPhotographyAPI.DTOs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -27,19 +28,28 @@ public class PhotosController(LpPhotoDbContext context) : BaseApiController
 
     [HttpPost]
     [Authorize(Roles = "Admin")]
-    public async Task<ActionResult<Photo>> PostPhoto(Photo newPhoto)
+    public async Task<ActionResult<Photo>> PostPhoto([FromBody] PhotoDto dto)
     {
-        var galleryExists = await context.Galleries.AnyAsync(g => g.Id == newPhoto.GalleryId);
-        if (!galleryExists)
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        var gallery = await context.Galleries.FindAsync(dto.GalleryId);
+        if (gallery == null)
+            return BadRequest("Invalid gallery ID.");
+
+        var photo = new Photo
         {
-            return BadRequest();
-        }
-        
-        context.Photos.Add(newPhoto);
+            Url = dto.Url,
+            Caption = dto.Caption,
+            GalleryId = dto.GalleryId
+        };
+
+        context.Photos.Add(photo);
         await context.SaveChangesAsync();
-        
-        return CreatedAtAction(nameof(GetPhotoById), new {id = newPhoto.Id}, newPhoto);
+
+        return CreatedAtAction(nameof(GetPhotoById), new { id = photo.Id }, photo);
     }
+
 
     [HttpGet("{id}")]
     public async Task<ActionResult<Photo>> GetPhotoById(string id)
@@ -74,26 +84,28 @@ public class PhotosController(LpPhotoDbContext context) : BaseApiController
 
     [HttpPut("{id}")]
     [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> UpdatePhoto(string id, Photo updatedPhoto)
+    public async Task<IActionResult> UpdatePhoto(string id, [FromBody] PhotoUpdateDto dto)
     {
-        if (id != updatedPhoto.Id)
+        if (id != dto.Id)
         {
-            return BadRequest();
+            return BadRequest("Photo ID mismatch.");
         }
-        
-        var photo = await context.Photos.FindAsync(id);
 
+        var photo = await context.Photos.FindAsync(id);
         if (photo == null)
         {
             return NotFound();
         }
-        
-        photo.Url = updatedPhoto.Url;
-        photo.Caption = updatedPhoto.Caption;
-        photo.GalleryId = updatedPhoto.GalleryId;
-        
+
+        // Update fields
+        photo.Url = dto.Url;
+        photo.Caption = dto.Caption;
+        photo.GalleryId = dto.GalleryId;
+
         await context.SaveChangesAsync();
+
         return NoContent();
     }
+
     
 }

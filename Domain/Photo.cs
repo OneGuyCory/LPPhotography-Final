@@ -10,5 +10,5 @@ public class Photo
     
     public required string GalleryId { get; set; }
 
-    public Gallery Gallery { get; set; } = null!; // setting up via EF relationship
+    public Gallery Gallery { get; set; } = null!;
 }

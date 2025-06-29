@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
 using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +16,20 @@ builder.Services.AddControllers()
 builder.Services.AddDbContext<LpPhotoDbContext>(dbContextOptions =>
     dbContextOptions.UseMySql(connectionString, serverVersion));
 builder.Services.AddCors();
+
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/login";
+        options.AccessDeniedPath = "/access-denied";
+    });
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("AdminPolicy", policy => policy.RequireRole("Admin"));
+    options.AddPolicy("ClientPolicy", policy => policy.RequireRole("Client"));
+});
+
 
 builder.Services.AddIdentityApiEndpoints<SiteUser>(opt =>
 {
