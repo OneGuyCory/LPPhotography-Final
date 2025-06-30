@@ -19,7 +19,9 @@ type Photo = {
     url: string;
     caption?: string;
     galleryId: string;
-}
+    isFeatured: boolean;
+};
+
 
 type Gallery = {
     id: string;

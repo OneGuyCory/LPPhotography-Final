@@ -2,7 +2,7 @@
 
 public class Gallery
 {
-    public string Id { get; set; } = Guid.NewGuid().ToString();
+    public Guid Id { get; set; }
     
     public string? Title { get; set; } //title for client specific gallery
     
@@ -12,6 +12,7 @@ public class Gallery
     
     public string? AccessCode { get; set; } // does it have an access code for client gallery
     public string? ClientEmail { get; set; }
+    public string? CoverImageUrl { get; set; }
 
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow; // sets date on creation
 

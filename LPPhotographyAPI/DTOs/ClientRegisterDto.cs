@@ -2,7 +2,7 @@
 
 public class ClientRegisterDto
 {
-    public string Email { get; set; } = string.Empty;
-    public string Password { get; set; } = string.Empty;
-    public string AccessCode { get; set; } = string.Empty;
+    public required string Email { get; set; }
+    public required string Password { get; set; }
+    public required string AccessCode { get; set; }
 }

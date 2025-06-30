@@ -69,7 +69,7 @@ public class DbInitializer
             // 4. Create a private gallery tied to the test client
             if (!context.Galleries.Any(g => g.ClientEmail == "client@example.com"))
             {
-                var galleryId = Guid.NewGuid().ToString();
+                var galleryId = Guid.NewGuid();
 
                 var gallery = new Gallery
                 {
@@ -84,10 +84,10 @@ public class DbInitializer
                     {
                         new Photo
                         {
-                            Id = Guid.NewGuid().ToString(),
+                            Id = Guid.NewGuid(),
                             Url = "https://res.cloudinary.com/dxqrgfgqo/image/upload/v1751082971/20240224_150835_mk2io6.jpg",
                             Caption = "Eye",
-                            GalleryId = galleryId // ✅ This is the fix
+                            GalleryId = galleryId 
                         }
                     }
                 };

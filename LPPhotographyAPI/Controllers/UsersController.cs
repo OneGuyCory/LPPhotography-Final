@@ -1,11 +1,13 @@
 ﻿using Domain;
 using LPPhotographyAPI.DTOs;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
 
 namespace LPPhotographyAPI.Controllers;
+
 
 public class UsersController(UserManager<SiteUser> userManager, SignInManager<SiteUser> signInManager) : BaseApiController
 {
@@ -40,7 +42,8 @@ public class UsersController(UserManager<SiteUser> userManager, SignInManager<Si
         var user = new SiteUser
         {
             UserName = userDto.Email,
-            Email = userDto.Email
+            Email = userDto.Email,
+            
         };
         
         var result = await userManager.CreateAsync(user, userDto.Password);
@@ -59,23 +62,45 @@ public class UsersController(UserManager<SiteUser> userManager, SignInManager<Si
         var user = new SiteUser
         {
             UserName = clientDto.Email,
-            Email = clientDto.Email
-            // Optionally: store access code in a separate field if needed
+            Email = clientDto.Email,
+            AccessCode = clientDto.AccessCode,
         };
 
         var result = await userManager.CreateAsync(user, clientDto.Password);
         if (!result.Succeeded)
         {
-            return BadRequest(result.Errors);
+            // Return the actual errors for debugging
+            return BadRequest(result.Errors.Select(e => e.Description));
         }
 
         await userManager.AddToRoleAsync(user, "Client");
 
-        // You can store the access code in a separate DB table or field,
-        // or use claims/metadata if needed to link them to a gallery
-
         return Ok(new { message = "Client registered successfully" });
     }
+    
+    [HttpGet("all")]
+    public async Task<IActionResult> GetAllUsers()
+    {
+        var users = await userManager.Users.ToListAsync();
+
+        var result = new List<object>();
+
+        foreach (var user in users)
+        {
+            var roles = await userManager.GetRolesAsync(user); // ✅ Proper async
+            result.Add(new
+            {
+                user.Id,
+                user.Email,
+                Role = roles.FirstOrDefault() ?? "None"
+            });
+        }
+
+        return Ok(result);
+    }
+
+
+
     
     [HttpPost("login-client")]
     public async Task<IActionResult> LoginClient(ClientLoginDto dto)
@@ -97,5 +122,25 @@ public class UsersController(UserManager<SiteUser> userManager, SignInManager<Si
             role = "Client"
         });
     }
+    
+    [Authorize(Roles = "Admin")]
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteUser(string id)
+    {
+        var user = await userManager.FindByIdAsync(id);
+        if (user == null)
+        {
+            return NotFound("User not found.");
+        }
+
+        var result = await userManager.DeleteAsync(user);
+        if (!result.Succeeded)
+        {
+            return BadRequest(result.Errors);
+        }
+
+        return Ok(new { message = "User deleted successfully" });
+    }
+
 
     }

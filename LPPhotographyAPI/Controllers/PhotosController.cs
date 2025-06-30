@@ -10,7 +10,7 @@ namespace LPPhotographyAPI.Controllers;
 public class PhotosController(LpPhotoDbContext context) : BaseApiController
 {
     [HttpGet("/gallery/{galleryId}")]
-    public async Task<ActionResult<IEnumerable<Photo>>> GetPhotosByGalleryId(string galleryId)
+    public async Task<ActionResult<IEnumerable<Photo>>> GetPhotosByGalleryId([FromRoute] Guid galleryId)
     {
         var photos = await context.Photos
             .Where(p => p.GalleryId == galleryId)
@@ -25,6 +25,17 @@ public class PhotosController(LpPhotoDbContext context) : BaseApiController
         }
         return Ok(photos);
     }
+    
+    [HttpGet("featured")]
+    public async Task<ActionResult<IEnumerable<Photo>>> GetFeaturedPhotos()
+    {
+        var featured = await context.Photos
+            .Where(p => p.IsFeatured)
+            .ToListAsync();
+
+        return Ok(featured);
+    }
+
 
     [HttpPost]
     [Authorize(Roles = "Admin")]
@@ -66,7 +77,7 @@ public class PhotosController(LpPhotoDbContext context) : BaseApiController
 
     [HttpDelete("{id}")]
     [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> DeletePhoto(string id)
+    public async Task<IActionResult> DeletePhoto(Guid id)
     {
         var photo = await context.Photos.FindAsync(id);
 
@@ -84,12 +95,13 @@ public class PhotosController(LpPhotoDbContext context) : BaseApiController
 
     [HttpPut("{id}")]
     [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> UpdatePhoto(string id, [FromBody] PhotoUpdateDto dto)
+    public async Task<IActionResult> UpdatePhoto(Guid id, [FromBody] PhotoUpdateDto dto)
     {
         if (id != dto.Id)
         {
             return BadRequest("Photo ID mismatch.");
         }
+            
 
         var photo = await context.Photos.FindAsync(id);
         if (photo == null)
@@ -97,15 +109,16 @@ public class PhotosController(LpPhotoDbContext context) : BaseApiController
             return NotFound();
         }
 
-        // Update fields
         photo.Url = dto.Url;
         photo.Caption = dto.Caption;
         photo.GalleryId = dto.GalleryId;
+        photo.IsFeatured = dto.IsFeatured; // ✅ update featured flag
 
         await context.SaveChangesAsync();
 
         return NoContent();
     }
+
 
     
 }

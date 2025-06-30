@@ -1,9 +1,16 @@
-﻿import React, { useEffect, useState } from "react";
-import { Link } from "react-router"; // make sure you're using react-router-dom!
+﻿import  { useEffect, useState } from "react";
+import { Link, useLocation } from "react-router";
 
 const Navbar: React.FC = () => {
     const [open, setOpen] = useState<boolean>(false);
     const [userRole, setUserRole] = useState<string | null>(null);
+
+    const location = useLocation();
+
+    // Auto-close mobile menu on route change
+    useEffect(() => {
+        setOpen(false);
+    }, [location.pathname]);
 
     useEffect(() => {
         setUserRole(localStorage.getItem("userRole"));
@@ -27,17 +34,17 @@ const Navbar: React.FC = () => {
                 background: `linear-gradient(to right, #2a4c65 0%, #fd8a93 69%, #f9b294 89%)`,
             }}
         >
-            <div className="flex items-center justify-between  ">
-                <Link to="/" className="text-xl font-bold hover:underline ">
+            <div className="flex items-center justify-between">
+                <Link to="/" className="text-xl font-bold hover:underline">
                     LP Photography
                 </Link>
                 <button className="md:hidden" onClick={() => setOpen(!open)}>
                     ☰
                 </button>
-                <ul className="hidden md:flex space-x-6 ">
-                    <li className= "hover:underline"><Link to="/">Home</Link></li>
-                    <li className= "hover:underline"><Link to="/galleries">Galleries</Link></li>
-                    <li className= "hover:underline"><Link to="/contact">Contact</Link></li>
+                <ul className="hidden md:flex space-x-6">
+                    <li className="hover:underline"><Link to="/">Home</Link></li>
+                    <li className="hover:underline"><Link to="/galleries">Galleries</Link></li>
+                    <li className="hover:underline"><Link to="/contact">Contact</Link></li>
 
                     {userRole === "Admin" && <li><Link to="/admin">Admin</Link></li>}
                     {userRole === "Client" && <li><Link to="/client-gallery">My Gallery</Link></li>}
@@ -49,7 +56,7 @@ const Navbar: React.FC = () => {
                             </button>
                         </li>
                     ) : (
-                        <li className= "hover:underline"><Link to="/login">Login</Link></li>
+                        <li className="hover:underline"><Link to="/login">Login</Link></li>
                     )}
                 </ul>
             </div>
@@ -57,8 +64,8 @@ const Navbar: React.FC = () => {
             {open && (
                 <ul className="flex flex-col md:hidden mt-2 space-y-2">
                     <li><Link to="/">Home</Link></li>
-                    <li ><Link to="/galleries">Galleries</Link></li>
-                    <li ><Link to="/contact">Contact</Link></li>
+                    <li><Link to="/galleries">Galleries</Link></li>
+                    <li><Link to="/contact">Contact</Link></li>
 
                     {userRole === "Admin" && <li><Link to="/admin">Admin</Link></li>}
                     {userRole === "Client" && <li><Link to="/client-gallery">My Gallery</Link></li>}
@@ -70,7 +77,7 @@ const Navbar: React.FC = () => {
                             </button>
                         </li>
                     ) : (
-                        <li ><Link to="/login">Login</Link></li>
+                        <li><Link to="/login">Login</Link></li>
                     )}
                 </ul>
             )}

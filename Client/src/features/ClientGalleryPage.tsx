@@ -62,6 +62,17 @@ export default function ClientGallery() {
                             onClick={() => setSelectedPhoto(photo)}
                             className="cursor-pointer w-full h-48 object-cover rounded hover:opacity-80 transition"
                         />
+
+                        <div className="flex justify-center gap-4 p-2 bg-white">
+                            <a
+                                href={photo.url.replace("/upload/", "/upload/fl_attachment/")}
+                                download
+                                className="text-sm text-indigo-600 hover:underline"
+                            >
+                                Download
+                            </a>
+                        </div>
+                        
                         {photo.caption && (
                             <div className="p-2 bg-white text-sm text-center">{photo.caption}</div>
                         )}
@@ -80,11 +91,32 @@ export default function ClientGallery() {
                         >
                             &times;
                         </button>
+
                         <img
                             src={selectedPhoto.url}
                             alt={selectedPhoto.caption || "Full View"}
                             className="w-full max-h-[80vh] object-contain rounded shadow-lg"
                         />
+
+                        <div className="flex justify-center gap-6 mt-4">
+                            <a
+                                href={selectedPhoto.url.replace(
+                                    "/upload/",
+                                    "/upload/fl_attachment/"
+                                )}
+                                download
+                                className="text-white bg-indigo-600 px-4 py-2 rounded hover:bg-indigo-700 transition text-sm"
+                            >
+                                Download
+                            </a>
+                            <button
+                                onClick={() => setSelectedPhoto(null)}
+                                className="text-sm text-white underline hover:text-red-300"
+                            >
+                                Close
+                            </button>
+                        </div>
+
                         {selectedPhoto.caption && (
                             <p className="text-white mt-4 text-center text-lg">
                                 {selectedPhoto.caption}

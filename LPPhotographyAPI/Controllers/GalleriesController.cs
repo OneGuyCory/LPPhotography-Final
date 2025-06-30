@@ -39,7 +39,7 @@ public class GalleriesController : BaseApiController
 
 
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetGalleryById(string id, [FromQuery] string? accessCode) 
+    public async Task<IActionResult> GetGalleryById([FromRoute] Guid id, [FromQuery] string? accessCode) 
     {
         var gallery = await _context.Galleries
             .Include(g => g.Photos)
@@ -58,7 +58,7 @@ public class GalleriesController : BaseApiController
     }
 
     [HttpGet("{id}/photos")]
-    public async Task<ActionResult<IEnumerable<Photo>>> GetPhotosByGalleryId(string id)
+    public async Task<ActionResult<IEnumerable<Photo>>> GetPhotosByGalleryId([FromRoute] Guid id)
     {
         var gallery = await _context.Galleries
             .Include(g => g.Photos)
@@ -109,7 +109,7 @@ public class GalleriesController : BaseApiController
 
     [HttpDelete("{id}")]
     [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> DeleteGallery(string id)
+    public async Task<IActionResult> DeleteGallery(Guid id)
     {
         var gallery = await _context.Galleries.FindAsync(id);
         if (gallery == null)
@@ -140,4 +140,17 @@ public class GalleriesController : BaseApiController
 
         return Ok(gallery);
     }
+    
+    [HttpPut("{id}/cover")]
+    public async Task<IActionResult> SetCoverImage(Guid id, [FromBody] string photoUrl)
+    {
+        var gallery = await _context.Galleries.FindAsync(id);
+        if (gallery == null) return NotFound();
+
+        gallery.CoverImageUrl = photoUrl;
+        await _context.SaveChangesAsync();
+
+        return NoContent();
+    }
+
 }

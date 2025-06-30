@@ -1,5 +1,5 @@
 ﻿import React, { useEffect, useState } from "react";
-import { useParams } from "react-router";
+import { useParams, Link } from "react-router";
 
 interface Photo {
     id: string;
@@ -7,46 +7,55 @@ interface Photo {
     caption?: string;
 }
 
-const mockGalleryPhotos: { [key: string]: Photo[] } = {
-    weddings: [
-        { id: "1", url: "https://res.cloudinary.com/YOUR_CLOUD_NAME/image/upload/wedding1.jpg", caption: "Ceremony" },
-        { id: "2", url: "https://res.cloudinary.com/YOUR_CLOUD_NAME/image/upload/wedding2.jpg", caption: "First Dance" }
-    ],
-    portraits: [
-        { id: "1", url: "https://res.cloudinary.com/YOUR_CLOUD_NAME/image/upload/portrait1.jpg", caption: "Outdoor Headshot" },
-        { id: "2", url: "https://res.cloudinary.com/YOUR_CLOUD_NAME/image/upload/portrait2.jpg", caption: "Studio Shot" }
-    ],
-    events: [
-        { id: "1", url: "https://res.cloudinary.com/YOUR_CLOUD_NAME/image/upload/event1.jpg" },
-        { id: "2", url: "https://res.cloudinary.com/YOUR_CLOUD_NAME/image/upload/event2.jpg" }
-    ],
-    landscapes: [
-        { id: "1", url: "https://res.cloudinary.com/dxqrgfgqo/image/upload/v1748728132/LPPhotography/o1kxybps3sygylornf6o.jpg", caption: "flower"}
-    ]
-};
-
-
-
 const GalleryDetailPage: React.FC = () => {
     const [selectedPhoto, setSelectedPhoto] = useState<Photo | null>(null);
-    const { id } = useParams(); // id will be something like 'weddings' or 'portraits'
+    const { id } = useParams<{ id: string }>();
     const [photos, setPhotos] = useState<Photo[]>([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        // This would become a fetch(`/api/galleries/${id}/photos`) later
-        const galleryPhotos = mockGalleryPhotos[id as string] || [];
-        setPhotos(galleryPhotos);
+        if (!id) return;
+
+        fetch(`https://localhost:5001/api/galleries/${id}/photos`, {
+            credentials: "include",
+        })
+            .then((res) => {
+                if (!res.ok) {
+                    throw new Error("Failed to fetch photos");
+                }
+                return res.json();
+            })
+            .then((data) => {
+                setPhotos(data);
+                setLoading(false);
+            })
+            .catch((err) => {
+                console.error("Error loading photos:", err);
+                setLoading(false);
+            });
     }, [id]);
 
     return (
         <div className="max-w-6xl mx-auto p-6 font-sans text-gray-900">
-            <h2 className="text-3xl font-bold text-center capitalize mb-8">{id} Gallery</h2>
+            <div className="flex justify-between items-center mb-6">
+                <h2 className="text-3xl font-bold capitalize">Gallery</h2>
+                <Link
+                    to="/galleries"
+                    className="text-indigo-600 hover:underline text-sm"
+                >
+                    ← Back to Galleries
+                </Link>
+            </div>
 
-            {photos.length === 0 ? (
-                <p className="text-center text-gray-600">No photos available in this gallery.</p>
+            {loading ? (
+                <p className="text-center text-gray-600">Loading photos...</p>
+            ) : photos.length === 0 ? (
+                <p className="text-center text-gray-600">
+                    No photos available in this gallery.
+                </p>
             ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-                    {photos.map(photo => (
+                    {photos.map((photo) => (
                         <div key={photo.id} className="rounded overflow-hidden shadow">
                             <img
                                 src={photo.url}
@@ -54,8 +63,21 @@ const GalleryDetailPage: React.FC = () => {
                                 onClick={() => setSelectedPhoto(photo)}
                                 className="cursor-pointer w-full h-48 object-cover rounded hover:opacity-80 transition"
                             />
+
+                            <div className="flex justify-center gap-4 p-2 bg-white">
+                                <a
+                                    href={photo.url.replace("/upload/", "/upload/fl_attachment/")}
+                                    download
+                                    className="text-sm text-indigo-600 hover:underline"
+                                >
+                                    Download
+                                </a>
+                            </div>
+
                             {photo.caption && (
-                                <div className="p-2 bg-white text-sm text-center">{photo.caption}</div>
+                                <div className="p-2 bg-white text-sm text-center">
+                                    {photo.caption}
+                                </div>
                             )}
                         </div>
                     ))}
@@ -73,13 +95,36 @@ const GalleryDetailPage: React.FC = () => {
                         >
                             &times;
                         </button>
+
                         <img
                             src={selectedPhoto.url}
                             alt={selectedPhoto.caption || "Full View"}
                             className="w-full max-h-[80vh] object-contain rounded shadow-lg"
                         />
+
+                        <div className="flex justify-center gap-6 mt-4">
+                            <a
+                                href={selectedPhoto.url.replace(
+                                    "/upload/",
+                                    "/upload/fl_attachment/"
+                                )}
+                                download
+                                className="text-white bg-indigo-600 px-4 py-2 rounded hover:bg-indigo-700 transition text-sm"
+                            >
+                                Download
+                            </a>
+                            <button
+                                onClick={() => setSelectedPhoto(null)}
+                                className="text-sm text-white underline hover:text-red-300"
+                            >
+                                Close
+                            </button>
+                        </div>
+
                         {selectedPhoto.caption && (
-                            <p className="text-white mt-4 text-center text-lg">{selectedPhoto.caption}</p>
+                            <p className="text-white mt-4 text-center text-lg">
+                                {selectedPhoto.caption}
+                            </p>
                         )}
                     </div>
                 </div>

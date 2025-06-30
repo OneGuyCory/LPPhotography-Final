@@ -13,7 +13,7 @@ const App: React.FC = () => {
     return (
         <Router>
             <NavBar />
-            <main className="min-h-screen">
+            <main className="min-h-screen ">
                 <Routes>
                     <Route path="/" element={<HomePage />} />
                     <Route path="/contact" element={<ContactPage />} />
