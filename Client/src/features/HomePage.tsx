@@ -1,43 +1,55 @@
 ﻿import { useEffect, useState } from 'react'
 
-        interface Photo {
-        id: string;
-        url: string;
-        caption?: string;
-        isFeatured?: boolean;
-    }
+// Define the expected structure of a photo returned from the API
+interface Photo {
+    id: string;
+    url: string;
+    caption?: string;
+    isFeatured?: boolean;
+}
 
-    export default function HomePage() {
-        const [featuredPhotos, setFeaturedPhotos] = useState<Photo[]>([]);
+export default function HomePage() {
+    const [featuredPhotos, setFeaturedPhotos] = useState<Photo[]>([]);
 
-        useEffect(() => {
-            fetch("https://localhost:5001/api/photos/featured")
-                .then((res) => res.json())
-                .then(setFeaturedPhotos)
-                .catch((err) => console.error("Failed to load featured photos", err));
-        }, []);
+    // Load featured photos when the component mounts
+    useEffect(() => {
+        fetch("https://localhost:5001/api/photos/featured")
+            .then((res) => res.json())
+            .then(setFeaturedPhotos)
+            .catch((err) => console.error("Failed to load featured photos", err));
+    }, []);
 
+    return (
+        <div>
+            <div className="font-sans text-gray-900">
 
-        return (
-        <div className="dark">
-            <div className="font-sans  text-gray-900 ">
-                {/* Hero */}
-                <section
-                    className="bg-cover bg-center h-[60vh] flex items-center justify-center text-white text-center"
-                    style={{ backgroundImage: "url('/your-hero-image.jpg')" }}
-                >
-                    <div className="bg-black/60 p-6 rounded-xl">
-                        <h2 className="text-4xl md:text-5xl font-bold mb-2">Capturing Life's Moments</h2>
-                        <p className="text-lg md:text-xl mb-4">Weddings * Portraits * Events * Landscapes</p>
-                        <a href="#contact" className="bg-white text-black px-6 py-2 rounded hover:bg-gray-200 transition">
+                {/* === Hero Section === */}
+                <section className="relative bg-black h-[70vh] flex items-center justify-center text-white">
+                    <div className="relative z-10 text-center px-6">
+                        <img
+                            src="/LPLOGOEYE.png"
+                            alt="LP Photography logo"
+                            className="mx-auto mb-6 w-[300px] max-w-full opacity-90"
+                        />
+                        <h1 className="text-5xl md:text-7xl font-bold tracking-wide mb-4 font-display">
+                            LP Photography
+                        </h1>
+                        <p className="text-lg md:text-xl text-gray-200 tracking-wider mb-8">
+                            Weddings • Portraits • Stories • Streets
+                        </p>
+                        <a
+                            href="/contact"
+                            className="inline-block border border-white text-white px-6 py-2 rounded-full text-sm tracking-widest hover:bg-white hover:text-black transition"
+                        >
                             Book a Session
                         </a>
                     </div>
                 </section>
 
-                {/* Featured Gallery Section */}
-                <section id="galleries" className="p-8">
+                {/* === Featured Gallery Section === */}
+                <section id="galleries" className="p-8 bg-[#ebe3d2]">
                     <h3 className="text-3xl font-bold text-center mb-6">Featured Work</h3>
+
                     {featuredPhotos.length === 0 ? (
                         <p className="text-center text-gray-500">No featured photos yet.</p>
                     ) : (
@@ -63,48 +75,63 @@
                     )}
                 </section>
 
-
-
-                <section id="pricing" className="bg-white p-8">
+                {/* === Pricing Section === */}
+                <section id="pricing" className="bg-[#ebe3d2] p-8">
                     <h3 className="text-3xl font-bold text-center mb-8">Pricing</h3>
-                    <div className="max-w-5xl mx-auto grid gap-6 md:grid-cols-3">
 
-                        <div className="border rounded-lg p-6 shadow hover:shadow-lg transition">
-                            <h4 className="text-xl font-semibold mb-2 text-center">Portrait Session</h4>
-                            <p className="text-center text-gray-700 mb-4">$150</p>
-                            <ul className="text-sm text-gray-600 space-y-2">
+                    <div className="max-w-5xl mx-auto grid gap-6 md:grid-cols-3">
+                        {/* Portrait */}
+                        <div
+                            style={{
+                                background: `linear-gradient(to right, #2a4c65 0%, #fd8a93 69%, #f9b294 89%)`,
+                            }}
+                            className="border rounded-lg p-6 shadow hover:shadow-lg transition"
+                        >
+                            <h4 className="text-xl font-semibold mb-2 text-center text-white">Portrait Session</h4>
+                            <p className="text-center text-white mb-4">$150</p>
+                            <ul className="text-sm text-white space-y-2">
                                 <li>✔ 1 hour shoot</li>
                                 <li>✔ 10 edited photos</li>
                                 <li>✔ Online gallery delivery</li>
                             </ul>
                         </div>
 
-                        <div className="border rounded-lg p-6 shadow hover:shadow-lg transition">
-                            <h4 className="text-xl font-semibold mb-2 text-center">Wedding Package</h4>
-                            <p className="text-center text-gray-700 mb-4">$1200</p>
-                            <ul className="text-sm text-gray-600 space-y-2">
+                        {/* Wedding */}
+                        <div
+                            style={{
+                                background: `linear-gradient(to right, #2a4c65 0%, #fd8a93 69%, #f9b294 89%)`,
+                            }}
+                            className="border rounded-lg p-6 shadow hover:shadow-lg transition"
+                        >
+                            <h4 className="text-xl font-semibold mb-2 text-center text-white">Wedding Package</h4>
+                            <p className="text-center text-white mb-4">$1200</p>
+                            <ul className="text-sm text-white space-y-2">
                                 <li>✔ 8 hours coverage</li>
                                 <li>✔ 150+ edited photos</li>
                                 <li>✔ Full-day event documentation</li>
                             </ul>
                         </div>
 
-                        <div className="border rounded-lg p-6 shadow hover:shadow-lg transition">
-                            <h4 className="text-xl font-semibold mb-2 text-center">Event Coverage</h4>
-                            <p className="text-center text-gray-700 mb-4">$300</p>
-                            <ul className="text-sm text-gray-600 space-y-2">
+                        {/* Event */}
+                        <div
+                            style={{
+                                background: `linear-gradient(to right, #2a4c65 0%, #fd8a93 69%, #f9b294 89%)`,
+                            }}
+                            className="border rounded-lg p-6 shadow hover:shadow-lg transition"
+                        >
+                            <h4 className="text-xl font-semibold mb-2 text-center text-white">Event Coverage</h4>
+                            <p className="text-center text-white mb-4">$300</p>
+                            <ul className="text-sm text-white space-y-2">
                                 <li>✔ 3 hours coverage</li>
                                 <li>✔ 50 edited photos</li>
                                 <li>✔ Great for parties & ceremonies</li>
                             </ul>
                         </div>
-
                     </div>
                 </section>
 
-
-                {/* Contact CTA */}
-                <section id="contact" className="bg-gray-100 p-8 text-center">
+                {/* === Contact CTA Section === */}
+                <section id="contact" className="bg-[#ebe3d2] p-8 text-center">
                     <h3 className="text-2xl font-bold mb-4">Let's Work Together</h3>
                     <p className="mb-4">Have questions or want to book a shoot? Reach out!</p>
                     <a href="/contact" className="bg-black text-white px-6 py-3 rounded hover:bg-gray-800 transition">

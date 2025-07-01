@@ -8,6 +8,10 @@ using Persistence;
 
 namespace LPPhotographyAPI.Controllers;
 
+/// <summary>
+/// Handles gallery creation, retrieval, and management.
+/// Supports public and private galleries, including client-specific logic.
+/// </summary>
 public class GalleriesController : BaseApiController
 {
     private readonly LpPhotoDbContext _context;
@@ -19,6 +23,9 @@ public class GalleriesController : BaseApiController
         _userManager = userManager;
     }
 
+    /// <summary>
+    /// Gets all **public** galleries (non-private).
+    /// </summary>
     [HttpGet]
     public async Task<ActionResult<List<Gallery>>> GetGalleries()
     {
@@ -27,7 +34,10 @@ public class GalleriesController : BaseApiController
             .Include(g => g.Photos)
             .ToListAsync();
     }
-    
+
+    /// <summary>
+    /// Gets **all galleries**, including private ones. Admin only.
+    /// </summary>
     [HttpGet("all")]
     [Authorize(Roles = "Admin")]
     public async Task<ActionResult<List<Gallery>>> GetAllGalleries()
@@ -37,9 +47,11 @@ public class GalleriesController : BaseApiController
             .ToListAsync();
     }
 
-
+    /// <summary>
+    /// Gets a gallery by ID. If private, requires correct access code.
+    /// </summary>
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetGalleryById([FromRoute] Guid id, [FromQuery] string? accessCode) 
+    public async Task<IActionResult> GetGalleryById([FromRoute] Guid id, [FromQuery] string? accessCode)
     {
         var gallery = await _context.Galleries
             .Include(g => g.Photos)
@@ -48,15 +60,20 @@ public class GalleriesController : BaseApiController
         if (gallery == null)
             return NotFound();
 
+        // Public gallery
         if (!gallery.IsPrivate)
             return Ok(gallery);
 
+        // Private gallery must match access code
         if (string.IsNullOrWhiteSpace(accessCode) || accessCode != gallery.AccessCode)
             return Unauthorized("Access code is required or incorrect for this private gallery.");
 
         return Ok(gallery);
     }
 
+    /// <summary>
+    /// Gets only the photos associated with a specific gallery.
+    /// </summary>
     [HttpGet("{id}/photos")]
     public async Task<ActionResult<IEnumerable<Photo>>> GetPhotosByGalleryId([FromRoute] Guid id)
     {
@@ -70,17 +87,24 @@ public class GalleriesController : BaseApiController
         return Ok(gallery.Photos);
     }
 
+    /// <summary>
+    /// Creates a new gallery. If private, auto-creates or updates associated client user.
+    /// Admin only.
+    /// </summary>
     [HttpPost]
     [Authorize(Roles = "Admin")]
     public async Task<ActionResult<Gallery>> CreateGallery(Gallery gallery)
     {
         _context.Galleries.Add(gallery);
 
+        // If this is a private gallery tied to a client, create or update the user
         if (gallery.IsPrivate && !string.IsNullOrWhiteSpace(gallery.ClientEmail))
         {
             var existingUser = await _userManager.FindByEmailAsync(gallery.ClientEmail);
+
             if (existingUser == null)
             {
+                // Create a new client user
                 var clientUser = new SiteUser
                 {
                     UserName = gallery.ClientEmail,
@@ -97,6 +121,7 @@ public class GalleriesController : BaseApiController
             }
             else
             {
+                // Update access code for existing user
                 existingUser.AccessCode = gallery.AccessCode;
                 await _userManager.UpdateAsync(existingUser);
             }
@@ -107,6 +132,9 @@ public class GalleriesController : BaseApiController
         return CreatedAtAction(nameof(GetGalleryById), new { id = gallery.Id }, gallery);
     }
 
+    /// <summary>
+    /// Deletes a gallery by ID. Admin only.
+    /// </summary>
     [HttpDelete("{id}")]
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> DeleteGallery(Guid id)
@@ -121,6 +149,10 @@ public class GalleriesController : BaseApiController
         return NoContent();
     }
 
+    /// <summary>
+    /// Gets the private gallery for the currently logged-in client.
+    /// Client role required.
+    /// </summary>
     [HttpGet("client")]
     [Authorize(Roles = "Client")]
     public async Task<ActionResult<Gallery>> GetClientGallery()
@@ -140,7 +172,10 @@ public class GalleriesController : BaseApiController
 
         return Ok(gallery);
     }
-    
+
+    /// <summary>
+    /// Sets the cover image URL for a gallery.
+    /// </summary>
     [HttpPut("{id}/cover")]
     public async Task<IActionResult> SetCoverImage(Guid id, [FromBody] string photoUrl)
     {
@@ -152,5 +187,4 @@ public class GalleriesController : BaseApiController
 
         return NoContent();
     }
-
 }

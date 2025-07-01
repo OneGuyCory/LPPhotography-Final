@@ -2,23 +2,23 @@
 import React, { useState } from "react";
 
 export default function LoginPage() {
-    // State to track login form inputs
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [accessCode, setAccessCode] = useState("");
-    const [isAdmin, setIsAdmin] = useState(true); // toggle between admin/client
+    // === STATE HOOKS ===
+    const [email, setEmail] = useState("");             // shared for both admin and client
+    const [password, setPassword] = useState("");       // for admin login
+    const [accessCode, setAccessCode] = useState("");   // for client login
+    const [isAdmin, setIsAdmin] = useState(true);       // toggle between admin/client views
 
-    // Handles form submission
+    // === HANDLER: FORM SUBMIT ===
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
         if (isAdmin) {
-            // 🔐 Admin Login
+            // 🔐 ADMIN LOGIN FLOW
             try {
                 const res = await fetch("https://localhost:5001/api/users/login", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
-                    credentials: "include", // allow cookies
+                    credentials: "include", // send cookies
                     body: JSON.stringify({ email, password })
                 });
 
@@ -31,13 +31,13 @@ export default function LoginPage() {
                 const data = await res.json();
                 localStorage.setItem("userRole", data.role);
                 localStorage.setItem("userEmail", data.email);
-                window.location.href = "/admin";
+                window.location.href = "/admin"; // redirect to admin dashboard
             } catch (error) {
                 console.error("Admin login error", error);
                 alert("An error occurred during admin login.");
             }
         } else {
-            // 👤 Client Login (Email + Access Code)
+            // 👤 CLIENT LOGIN FLOW
             try {
                 const res = await fetch("https://localhost:5001/api/users/login-client", {
                     method: "POST",
@@ -55,7 +55,7 @@ export default function LoginPage() {
                 const data = await res.json();
                 localStorage.setItem("userRole", "Client");
                 localStorage.setItem("userEmail", data.email);
-                window.location.href = `/client-gallery`;// redirect after login
+                window.location.href = `/client-gallery`; // redirect to private gallery
             } catch (error) {
                 console.error("Client login error", error);
                 alert("An error occurred during client login.");
@@ -64,14 +64,14 @@ export default function LoginPage() {
     };
 
     return (
-        <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
+        <div className="min-h-screen bg-[#ebe3d2] flex items-center justify-center p-4">
             <div className="bg-white p-8 rounded shadow max-w-md w-full">
-                {/* Heading */}
+                {/* === Heading === */}
                 <h2 className="text-2xl font-bold mb-6 text-center">
                     {isAdmin ? "Admin Login" : "Client Access"}
                 </h2>
 
-                {/* Toggle Buttons */}
+                {/* === Toggle Buttons (Admin / Client) === */}
                 <div className="flex justify-center mb-4 space-x-4">
                     <button
                         className={`px-4 py-2 rounded ${isAdmin ? "bg-blue-600 text-white" : "bg-gray-200"}`}
@@ -89,9 +89,9 @@ export default function LoginPage() {
                     </button>
                 </div>
 
-                {/* Form */}
+                {/* === Login Form === */}
                 <form onSubmit={handleSubmit} className="space-y-4">
-                    {/* Shared email field */}
+                    {/* Email (used by both roles) */}
                     <input
                         type="email"
                         placeholder="Email"
@@ -100,10 +100,9 @@ export default function LoginPage() {
                         onChange={(e) => setEmail(e.target.value)}
                         required
                     />
-                    
 
+                    {/* Conditional Field: Admin Password or Client Access Code */}
                     {isAdmin ? (
-                        // Admin: Email + Password
                         <input
                             type="password"
                             placeholder="Password"
@@ -113,7 +112,6 @@ export default function LoginPage() {
                             required
                         />
                     ) : (
-                        // Client: Email + Access Code
                         <input
                             type="password"
                             placeholder="Access Code"
@@ -124,7 +122,7 @@ export default function LoginPage() {
                         />
                     )}
 
-                    {/* Submit button */}
+                    {/* Submit Button */}
                     <button
                         type="submit"
                         className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition"

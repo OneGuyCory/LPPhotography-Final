@@ -10,3 +10,5 @@ export default defineConfig({
   },
   plugins: [react(), mkcert(), tailwindcss()],
 })
+
+

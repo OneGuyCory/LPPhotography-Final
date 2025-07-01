@@ -8,34 +8,47 @@ using Persistence;
 
 namespace LPPhotographyAPI.Controllers;
 
-
+/// <summary>
+/// Handles user authentication, registration, and user management.
+/// Supports Admin and Client roles. Includes login, logout, and user CRUD actions.
+/// </summary>
 public class UsersController(UserManager<SiteUser> userManager, SignInManager<SiteUser> signInManager) : BaseApiController
 {
+    /// <summary>
+    /// Logs in a user using their email and password.
+    /// </summary>
     [HttpPost("login")]
     public async Task<IActionResult> Login(LoginDto loginDto)
     {
         var user = await userManager.FindByEmailAsync(loginDto.Email);
         if (user == null)
-        {
             return Unauthorized("Invalid Credentials");
-        }
-        
-        var result = await signInManager.PasswordSignInAsync(user,loginDto.Password, isPersistent: false, lockoutOnFailure: false);
+
+        var result = await signInManager.PasswordSignInAsync(user, loginDto.Password, isPersistent: false, lockoutOnFailure: false);
         if (!result.Succeeded)
-        {
             return Unauthorized("Invalid Credentials");
-        }
-        
-        return Ok(new {message = "Successfully logged in", role = (await userManager.GetRolesAsync(user)).FirstOrDefault()});
+
+        return Ok(new 
+        {
+            message = "Successfully logged in", 
+            role = (await userManager.GetRolesAsync(user)).FirstOrDefault()
+        });
     }
 
+    /// <summary>
+    /// Logs out the currently signed-in user.
+    /// </summary>
     [HttpPost("logout")]
     public async Task<IActionResult> Logout()
     {
         await signInManager.SignOutAsync();
-        return Ok(new  {message = "Successfully logged out"});
+        return Ok(new { message = "Successfully logged out" });
     }
 
+    /// <summary>
+    /// Registers a new user with a role (Admin or Client).
+    /// This endpoint is typically used for Admin-created accounts.
+    /// </summary>
     [HttpPost("register")]
     public async Task<IActionResult> CreateUser(CreateUserDto userDto)
     {
@@ -43,19 +56,20 @@ public class UsersController(UserManager<SiteUser> userManager, SignInManager<Si
         {
             UserName = userDto.Email,
             Email = userDto.Email,
-            
         };
-        
+
         var result = await userManager.CreateAsync(user, userDto.Password);
         if (!result.Succeeded)
-        {
             return BadRequest(result.Errors);
-        }
 
         await userManager.AddToRoleAsync(user, userDto.Role);
-        return Ok(new {message = "Successfully registered"});
+        return Ok(new { message = "Successfully registered" });
     }
-    
+
+    /// <summary>
+    /// Registers a client user using email, password, and an access code.
+    /// Used by Admin to create client-specific logins.
+    /// </summary>
     [HttpPost("register-client")]
     public async Task<IActionResult> RegisterClient(ClientRegisterDto clientDto)
     {
@@ -68,26 +82,26 @@ public class UsersController(UserManager<SiteUser> userManager, SignInManager<Si
 
         var result = await userManager.CreateAsync(user, clientDto.Password);
         if (!result.Succeeded)
-        {
-            // Return the actual errors for debugging
             return BadRequest(result.Errors.Select(e => e.Description));
-        }
 
         await userManager.AddToRoleAsync(user, "Client");
 
         return Ok(new { message = "Client registered successfully" });
     }
-    
+
+    /// <summary>
+    /// Returns a list of all users with their role.
+    /// Accessible only to Admins.
+    /// </summary>
     [HttpGet("all")]
     public async Task<IActionResult> GetAllUsers()
     {
         var users = await userManager.Users.ToListAsync();
-
         var result = new List<object>();
 
         foreach (var user in users)
         {
-            var roles = await userManager.GetRolesAsync(user); // ✅ Proper async
+            var roles = await userManager.GetRolesAsync(user);
             result.Add(new
             {
                 user.Id,
@@ -99,20 +113,17 @@ public class UsersController(UserManager<SiteUser> userManager, SignInManager<Si
         return Ok(result);
     }
 
-
-
-    
+    /// <summary>
+    /// Allows a client to log in using email and access code (no password required).
+    /// This is used to support private galleries without exposing password logins.
+    /// </summary>
     [HttpPost("login-client")]
     public async Task<IActionResult> LoginClient(ClientLoginDto dto)
     {
-        // Step 1: Find the user by email
         var user = await userManager.FindByEmailAsync(dto.Email);
         if (user == null || user.AccessCode != dto.AccessCode)
-        {
             return Unauthorized("Invalid access credentials.");
-        }
 
-        // Step 2: Sign in the user (without password)
         await signInManager.SignInAsync(user, isPersistent: false);
 
         return Ok(new
@@ -122,25 +133,22 @@ public class UsersController(UserManager<SiteUser> userManager, SignInManager<Si
             role = "Client"
         });
     }
-    
+
+    /// <summary>
+    /// Deletes a user by ID. Requires Admin role.
+    /// </summary>
     [Authorize(Roles = "Admin")]
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteUser(string id)
     {
         var user = await userManager.FindByIdAsync(id);
         if (user == null)
-        {
             return NotFound("User not found.");
-        }
 
         var result = await userManager.DeleteAsync(user);
         if (!result.Succeeded)
-        {
             return BadRequest(result.Errors);
-        }
 
         return Ok(new { message = "User deleted successfully" });
     }
-
-
-    }
+}

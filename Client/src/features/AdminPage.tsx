@@ -1,11 +1,15 @@
-﻿import { useEffect, useState } from "react";
+﻿// AdminPage.tsx
+
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 
+// Define shape of a gallery
 interface Gallery {
     id: string;
     title: string;
 }
 
+// Define shape of a photo (optional fields for caption/featured)
 interface Photo {
     id: string;
     url: string;
@@ -13,6 +17,7 @@ interface Photo {
     isFeatured?: boolean;
 }
 
+// Define shape of a user object
 interface User {
     id: string;
     email: string;
@@ -21,26 +26,35 @@ interface User {
 
 export default function AdminPage() {
     const navigate = useNavigate();
+
+    // 📦 Admin state variables
     const [galleries, setGalleries] = useState<Gallery[]>([]);
     const [selectedGalleryId, setSelectedGalleryId] = useState("");
     const [photos, setPhotos] = useState<Photo[]>([]);
+
+    // 📤 Upload and form inputs
     const [uploading, setUploading] = useState(false);
     const [uploadUrl, setUploadUrl] = useState("");
     const [caption, setCaption] = useState("");
+
+    // 🖊️ Photo editing state
     const [editingPhotoId, setEditingPhotoId] = useState<string | null>(null);
     const [editCaption, setEditCaption] = useState("");
     const [editIsFeatured, setEditIsFeatured] = useState(false);
+
+    // 🆕 New gallery form
     const [newGalleryTitle, setNewGalleryTitle] = useState("");
     const [isPrivate, setIsPrivate] = useState(false);
     const [clientEmail, setClientEmail] = useState("");
     const [accessCode, setAccessCode] = useState("");
 
-    // New for user management
+    // 👤 User management
     const [users, setUsers] = useState<User[]>([]);
     const [newUserEmail, setNewUserEmail] = useState("");
     const [newUserPassword, setNewUserPassword] = useState("");
     const [newUserRole, setNewUserRole] = useState("Client");
 
+    // 🔐 Redirect non-admins
     useEffect(() => {
         const role = localStorage.getItem("userRole");
         if (role !== "Admin") {
@@ -48,6 +62,7 @@ export default function AdminPage() {
         }
     }, [navigate]);
 
+    // 📥 Fetch galleries and users on load
     useEffect(() => {
         fetch("https://localhost:5001/api/galleries/all", { credentials: "include" })
             .then((res) => res.json())
@@ -60,6 +75,7 @@ export default function AdminPage() {
             .catch(console.error);
     }, []);
 
+    // 📷 Fetch photos for selected gallery
     useEffect(() => {
         if (selectedGalleryId) {
             fetch(`https://localhost:5001/api/galleries/${selectedGalleryId}/photos`)
@@ -70,6 +86,7 @@ export default function AdminPage() {
         }
     }, [selectedGalleryId]);
 
+    // 🌩️ Upload image to Cloudinary
     const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (!file) return;
@@ -94,6 +111,7 @@ export default function AdminPage() {
         }
     };
 
+    // 💾 Save uploaded image as photo in backend
     const handleSavePhoto = () => {
         if (!uploadUrl) return;
 
@@ -117,6 +135,7 @@ export default function AdminPage() {
             });
     };
 
+    // ✏️ Update existing photo (caption + isFeatured)
     const handleUpdatePhoto = (photoId: string) => {
         const existing = photos.find((p) => p.id === photoId);
         if (!existing) return;
@@ -138,13 +157,16 @@ export default function AdminPage() {
             .then((res) => {
                 if (!res.ok) throw new Error("Update failed");
                 setPhotos((prev) =>
-                    prev.map((p) => (p.id === photoId ? { ...p, caption: editCaption, isFeatured: editIsFeatured } : p))
+                    prev.map((p) =>
+                        p.id === photoId ? { ...p, caption: editCaption, isFeatured: editIsFeatured } : p
+                    )
                 );
                 setEditingPhotoId(null);
             })
             .catch(() => alert("Failed to update photo"));
     };
 
+    // ❌ Delete a photo
     const handleDeletePhoto = (photoId: string) => {
         fetch(`https://localhost:5001/api/photos/${photoId}`, {
             method: "DELETE",
@@ -152,6 +174,7 @@ export default function AdminPage() {
         }).then(() => setPhotos((prev) => prev.filter((p) => p.id !== photoId)));
     };
 
+    // ❌ Delete a gallery
     const handleDeleteGallery = (galleryId: string) => {
         if (!window.confirm("Delete this gallery and all its photos?")) return;
 
@@ -167,6 +190,7 @@ export default function AdminPage() {
         });
     };
 
+    // ➕ Create new gallery (public or private)
     const handleCreateGallery = () => {
         const newGallery = {
             title: newGalleryTitle,
@@ -192,6 +216,7 @@ export default function AdminPage() {
             });
     };
 
+    // ⭐ Set a cover image for a gallery
     const handleSetCover = (photoUrl: string) => {
         fetch(`https://localhost:5001/api/galleries/${selectedGalleryId}/cover`, {
             method: "PUT",
@@ -204,6 +229,7 @@ export default function AdminPage() {
         });
     };
 
+    // ➕ Register a new admin or client user
     const handleCreateUser = () => {
         const endpoint = newUserRole === "Client" ? "register-client" : "register";
         const payload =
@@ -224,7 +250,6 @@ export default function AdminPage() {
             .then((res) => res.json())
             .then((updatedUsers) => {
                 setUsers(updatedUsers);
-                // ✅ Clear all fields after success
                 setNewUserEmail("");
                 setNewUserPassword("");
                 setAccessCode("");
@@ -232,7 +257,7 @@ export default function AdminPage() {
             .catch(() => alert("Failed to create user"));
     };
 
-
+    // ❌ Delete a user by ID
     const handleDeleteUser = (userId: string) => {
         if (!window.confirm("Delete this user?")) return;
         fetch(`https://localhost:5001/api/users/${userId}`, {
@@ -243,8 +268,8 @@ export default function AdminPage() {
             .catch(() => alert("User deletion failed"));
     };
 
-    return (
-        <div className="p-6 max-w-5xl mx-auto">
+return (
+        <div className=" p-6 max-w-5xl mx-auto">
         <h1 className="text-3xl font-bold mb-4">Admin Dashboard</h1>
 
             {/* Create Users */}

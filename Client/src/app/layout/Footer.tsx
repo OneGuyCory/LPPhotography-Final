@@ -1,22 +1,29 @@
-﻿import React from "react";
+﻿// Footer.tsx
 
+import React from "react";
+
+// 📌 Footer component with gradient background and Facebook link
 const Footer: React.FC = () => {
     return (
         <footer
             className="text-white p-4 text-center flex flex-col md:flex-row items-center justify-between"
             style={{
-                background: "linear-gradient(to right, #2a4c65 0%, #fd8a93 69%, #f9b294 89%)"
+                background: `linear-gradient(to right, #2a4c65 0%, #fd8a93 69%, #f9b294 89%)`
             }}
         >
+            {/* 📆 Dynamic copyright */}
             <p className="mb-2 md:mb-0">
                 &copy; {new Date().getFullYear()} LP Photography. All rights reserved.
             </p>
+
+            {/* 🔗 Facebook link */}
             <a
                 href="https://www.facebook.com/LovelyProfanity"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center space-x-2 hover:underline"
             >
+                {/* 📘 Facebook SVG Icon */}
                 <svg
                     className="w-5 h-5 fill-white hover:fill-blue-300 transition"
                     xmlns="http://www.w3.org/2000/svg"
