@@ -16,22 +16,22 @@ public class PhotosController(LpPhotoDbContext context) : BaseApiController
     /// <summary>
     /// Gets all photos for a specific gallery by its ID.
     /// </summary>
-    [HttpGet("/gallery/{galleryId}")]
-    public async Task<ActionResult<IEnumerable<Photo>>> GetPhotosByGalleryId([FromRoute] Guid galleryId)
-    {
-        var photos = await context.Photos
-            .Where(p => p.GalleryId == galleryId)
-            .ToListAsync();
+    //[HttpGet("/gallery/{galleryId}")]
+    //public async Task<ActionResult<IEnumerable<Photo>>> GetPhotosByGalleryId([FromRoute] Guid galleryId)
+    //{
+      //  var photos = await context.Photos
+        //    .Where(p => p.GalleryId == galleryId)
+          //  .ToListAsync();
 
-        var galleryExists = await context.Galleries.AnyAsync(g => g.Id == galleryId);
+        //var galleryExists = await context.Galleries.AnyAsync(g => g.Id == galleryId);
 
-        if (!galleryExists)
-        {
-            return NotFound();
-        }
+        //if (!galleryExists)
+        //{
+          //  return NotFound();
+        //}
 
-        return Ok(photos);
-    }
+        //return Ok(photos);
+    //}
 
     /// <summary>
     /// Gets all photos marked as featured (for homepage or promotions).

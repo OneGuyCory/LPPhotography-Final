@@ -179,9 +179,11 @@ public class GalleriesController : BaseApiController
     [HttpPut("{id}/cover")]
     public async Task<IActionResult> SetCoverImage(Guid id, [FromBody] string photoUrl)
     {
+        //sets gallery to specific gallery found by id, returns not found if null
         var gallery = await _context.Galleries.FindAsync(id);
         if (gallery == null) return NotFound();
 
+        //sets the cover image to the photo selected
         gallery.CoverImageUrl = photoUrl;
         await _context.SaveChangesAsync();
 
