@@ -25,14 +25,14 @@ const Navbar: React.FC = () => {
     };
 
     //pink gradient
-    //style={{
-       // background: `linear-gradient(to right, #2a4c65 0%, #fd8a93 69%, #f9b294 89%)`
-    //}}
+    
     // green gradient
     //background: linear-gradient(to right, #0F0F0F 0%, #1F3540 55%, #365348 90%);
 
     return (        
-        <nav className="sticky top-0 z-50 bg-black/70 backdrop-blur-md shadow-lg">
+        <nav className="sticky top-0 z-50 bg-black/70 backdrop-blur-md shadow-lg " style={{
+            background: `linear-gradient(to right, #2a4c65 0%, #fd8a93 69%, #f9b294 89%)`
+        }}>
             <div className="w-full px-6 py-4 flex items-center justify-between text-white">
                 {/* Logo */}
                 <Link
