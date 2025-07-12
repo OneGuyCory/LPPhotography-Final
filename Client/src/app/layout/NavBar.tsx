@@ -15,7 +15,7 @@ const Navbar: React.FC = () => {
     }, []);
 
     const logout = async () => {
-        await fetch("https://localhost:5001/api/users/logout", {
+        await fetch("https://lpphotography.azurewebsites.net/api/users/logout", {
             method: "POST",
             credentials: "include",
         });

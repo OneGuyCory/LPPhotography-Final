@@ -1,21 +1,21 @@
 ﻿import React, { useState, useEffect } from "react";
 import { Link } from "react-router"; 
 
-// === Interface for gallery items from the backend ===
+// Interface for gallery items from the backend
 interface GalleryItem {
     id: string;
     title: string;
     coverImageUrl: string | null;
 }
 
-// === Main component ===
+// Main component
 const GalleryPage: React.FC = () => {
     const [galleries, setGalleries] = useState<GalleryItem[]>([]);
     const [loading, setLoading] = useState(true);
 
-    // === Fetch galleries from API on component mount ===
+    // Fetch galleries from API on component mount
     useEffect(() => {
-        fetch("https://localhost:5001/api/galleries", { credentials: "include" })
+        fetch("https://lpphotography.azurewebsites.net/api/galleries", { credentials: "include" })
             .then((res) => {
                 if (!res.ok) {
                     throw new Error("Failed to fetch galleries");
@@ -36,7 +36,7 @@ const GalleryPage: React.FC = () => {
         <div className="min-h-screen bg-[#ebe3d2] py-10 px-4">
             <div className="max-w-6xl mx-auto bg-white p-6 rounded-lg shadow">
 
-                {/* === Page Heading + Navigation === */}
+                {/* Page Heading + Navigation */}
                 <div className="flex justify-between items-center mb-6">
                     <h2 className="text-3xl font-bold text-gray-800">Gallery</h2>
                     <Link
@@ -47,7 +47,7 @@ const GalleryPage: React.FC = () => {
                     </Link>
                 </div>
 
-                {/* === Loading or Empty State === */}
+                {/* Loading or Empty State */}
                 {loading ? (
                     <p className="text-center text-gray-600">Loading galleries...</p>
                 ) : galleries.length === 0 ? (
@@ -55,7 +55,7 @@ const GalleryPage: React.FC = () => {
                         No galleries found. Check back soon!
                     </p>
                 ) : (
-                    // === Gallery Grid ===
+                    //  Gallery Grid 
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
                         {galleries.map((gallery) => (
                             <a

@@ -20,7 +20,7 @@ public class LpPhotoDbContext : IdentityDbContext<SiteUser>
     {
         base.OnModelCreating(builder);
 
-        // Optional: Fluent API relationships (EF usually handles this by convention)
+        // API relationships
         builder.Entity<Photo>()
             .HasOne(p => p.Gallery)
             .WithMany(g => g.Photos)

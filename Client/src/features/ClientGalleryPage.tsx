@@ -14,12 +14,12 @@ interface Photo {
 }
 
 export default function ClientGallery() {
-    // === State ===
+    // State 
     const [gallery, setGallery] = useState<Gallery | null>(null);
     const [error, setError] = useState("");
     const [selectedPhoto, setSelectedPhoto] = useState<Photo | null>(null);
 
-    // === Fetch client's private gallery on mount ===
+    // Fetch client's private gallery on mount 
     useEffect(() => {
         const role = localStorage.getItem("userRole");
 
@@ -30,7 +30,7 @@ export default function ClientGallery() {
         }
 
         // 📥 Fetch gallery for authenticated client
-        fetch("https://localhost:5001/api/galleries/client", {
+        fetch("https://lpphotography.azurewebsites.net/api/galleries/client", {
             method: "GET",
             credentials: "include", // send cookies
         })
@@ -47,12 +47,12 @@ export default function ClientGallery() {
             });
     }, []);
 
-    // === Error state ===
+    //  Error state 
     if (error) {
         return <div className="p-6 text-red-600">Error: {error}</div>;
     }
 
-    // === Loading state ===
+    // Loading state 
     if (!gallery) {
         return <div className="p-6">Loading your gallery...</div>;
     }
@@ -61,7 +61,7 @@ export default function ClientGallery() {
         <div className="max-w-6xl mx-auto p-6 font-sans text-gray-900">
             <h1 className="text-3xl font-bold text-center mb-8">{gallery.title}</h1>
 
-            {/* === Photo Grid === */}
+            {/*  Photo Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
                 {gallery.photos.map((photo) => (
                     <div key={photo.id} className="rounded overflow-hidden shadow">
@@ -94,7 +94,7 @@ export default function ClientGallery() {
                 ))}
             </div>
 
-            {/* === Modal for fullscreen preview === */}
+            {/* Modal for fullscreen preview  */}
             {selectedPhoto && (
                 <div className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50">
                     <div className="relative max-w-4xl w-full mx-4">

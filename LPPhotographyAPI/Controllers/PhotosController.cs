@@ -7,15 +7,11 @@ using Persistence;
 
 namespace LPPhotographyAPI.Controllers;
 
-/// <summary>
-/// Handles photo-related API operations including upload, retrieval,
-/// update, deletion, and featured photo queries. Restricted admin access for modification.
-/// </summary>
+// Handles photo-related API operations including upload, retrieval,
+// update, deletion, and featured photo queries. Restricted admin access for modification.
 public class PhotosController(LpPhotoDbContext context) : BaseApiController
 {
-    /// <summary>
-    /// Gets all photos for a specific gallery by its ID.
-    /// </summary>
+    ///Gets all photos for a specific gallery by its ID.
     //[HttpGet("/gallery/{galleryId}")]
     //public async Task<ActionResult<IEnumerable<Photo>>> GetPhotosByGalleryId([FromRoute] Guid galleryId)
     //{
@@ -32,10 +28,8 @@ public class PhotosController(LpPhotoDbContext context) : BaseApiController
 
         //return Ok(photos);
     //}
-
-    /// <summary>
-    /// Gets all photos marked as featured (for homepage or promotions).
-    /// </summary>
+    
+    // Gets all photos marked as featured (for homepage or promotions).
     [HttpGet("featured")]
     public async Task<ActionResult<IEnumerable<Photo>>> GetFeaturedPhotos()
     {
@@ -45,11 +39,9 @@ public class PhotosController(LpPhotoDbContext context) : BaseApiController
 
         return Ok(featured);
     }
-
-    /// <summary>
-    /// Adds a new photo to a gallery.
-    /// Requires Admin role.
-    /// </summary>
+    
+    // Adds a new photo to a gallery.
+    // Requires Admin role.
     [HttpPost]
     [Authorize(Roles = "Admin")]
     public async Task<ActionResult<Photo>> PostPhoto([FromBody] PhotoDto dto)
@@ -74,10 +66,8 @@ public class PhotosController(LpPhotoDbContext context) : BaseApiController
         // Return created photo with 201 status and location header
         return CreatedAtAction(nameof(GetPhotoById), new { id = photo.Id }, photo);
     }
-
-    /// <summary>
-    /// Gets a single photo by its unique ID.
-    /// </summary>
+    
+    // Gets a single photo by its unique ID.
     [HttpGet("{id}")]
     public async Task<ActionResult<Photo>> GetPhotoById(string id)
     {
@@ -90,11 +80,9 @@ public class PhotosController(LpPhotoDbContext context) : BaseApiController
 
         return Ok(photo);
     }
-
-    /// <summary>
-    /// Deletes a photo by its ID.
-    /// Requires Admin role.
-    /// </summary>
+    
+    // Deletes a photo by its ID.
+    // Requires Admin
     [HttpDelete("{id}")]
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> DeletePhoto(Guid id)
@@ -111,11 +99,9 @@ public class PhotosController(LpPhotoDbContext context) : BaseApiController
 
         return Ok("Photo deleted successfully");
     }
-
-    /// <summary>
-    /// Updates a photo's metadata (caption, featured, URL, etc.).
-    /// Requires Admin role.
-    /// </summary>
+    
+    // Updates a photo's metadata (caption, featured)
+    // Requires Admin
     [HttpPut("{id}")]
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> UpdatePhoto(Guid id, [FromBody] PhotoUpdateDto dto)

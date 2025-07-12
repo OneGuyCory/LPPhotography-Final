@@ -7,16 +7,11 @@ using Microsoft.EntityFrameworkCore;
 using Persistence;
 
 namespace LPPhotographyAPI.Controllers;
-
-/// <summary>
-/// Handles user authentication, registration, and user management.
-/// Supports Admin and Client roles. Includes login, logout, and user CRUD actions.
-/// </summary>
+// Handles user authentication, registration, and user management.
+// Supports Admin and Client roles. Includes login, logout, and user CRUD actions.
 public class UsersController(UserManager<SiteUser> userManager, SignInManager<SiteUser> signInManager) : BaseApiController
 {
-    /// <summary>
-    /// Logs in a user using their email and password.
-    /// </summary>
+    // Logs in a user using their email and password.
     [HttpPost("login")]
     public async Task<IActionResult> Login(LoginDto loginDto)
     {
@@ -34,21 +29,16 @@ public class UsersController(UserManager<SiteUser> userManager, SignInManager<Si
             role = (await userManager.GetRolesAsync(user)).FirstOrDefault()
         });
     }
-
-    /// <summary>
-    /// Logs out the currently signed-in user.
-    /// </summary>
+    
+    // Logs out the currently signed-in user.
     [HttpPost("logout")]
     public async Task<IActionResult> Logout()
     {
         await signInManager.SignOutAsync();
         return Ok(new { message = "Successfully logged out" });
     }
-
-    /// <summary>
-    /// Registers a new user with a role (Admin or Client).
-    /// This endpoint is typically used for Admin-created accounts.
-    /// </summary>
+    
+    // Registers a new user with a role (Admin or Client)
     [HttpPost("register")]
     public async Task<IActionResult> CreateUser(CreateUserDto userDto)
     {
@@ -65,11 +55,9 @@ public class UsersController(UserManager<SiteUser> userManager, SignInManager<Si
         await userManager.AddToRoleAsync(user, userDto.Role);
         return Ok(new { message = "Successfully registered" });
     }
-
-    /// <summary>
-    /// Registers a client user using email, password, and an access code.
-    /// Used by Admin to create client-specific logins.
-    /// </summary>
+    
+    // Registers a client user using email, password, and an access code.
+    // Used by Admin to create client-specific logins.
     [HttpPost("register-client")]
     public async Task<IActionResult> RegisterClient(ClientRegisterDto clientDto)
     {
@@ -88,11 +76,9 @@ public class UsersController(UserManager<SiteUser> userManager, SignInManager<Si
 
         return Ok(new { message = "Client registered successfully" });
     }
-
-    /// <summary>
-    /// Returns a list of all users with their role.
-    /// Accessible only to Admins.
-    /// </summary>
+    
+    // Returns a list of all users with their role.
+    // Admin use
     [HttpGet("all")]
     public async Task<IActionResult> GetAllUsers()
     {
@@ -112,11 +98,8 @@ public class UsersController(UserManager<SiteUser> userManager, SignInManager<Si
 
         return Ok(result);
     }
-
-    /// <summary>
-    /// Allows a client to log in using email and access code (no password required).
-    /// This is used to support private galleries without exposing password logins.
-    /// </summary>
+    
+    // Allows a client to log in using email and access code (no password required).
     [HttpPost("login-client")]
     public async Task<IActionResult> LoginClient(ClientLoginDto dto)
     {
@@ -133,10 +116,8 @@ public class UsersController(UserManager<SiteUser> userManager, SignInManager<Si
             role = "Client"
         });
     }
-
-    /// <summary>
-    /// Deletes a user by ID. Requires Admin role.
-    /// </summary>
+    
+    // Deletes a user by ID. Requires Admin 
     [Authorize(Roles = "Admin")]
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteUser(string id)

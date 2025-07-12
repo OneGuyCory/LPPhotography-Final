@@ -6,17 +6,11 @@ using Persistence;
 
 namespace LPPhotographyAPI.Controllers;
 
-/// <summary>
-/// Handles the contact form functionality by accepting messages from users
-/// and sending them via SMTP to a configured email address.
-/// </summary>
+// Handles the contact form functionality by accepting messages from users
+// and sending them via SMTP to a configured email address.
 public class ContactMessageController(LpPhotoDbContext context, IConfiguration config) : BaseApiController
 {
-    /// <summary>
-    /// Receives contact form submission and sends it via email using SMTP.
-    /// </summary>
-    /// <param name="contactMessage">The contact form data posted from the frontend.</param>
-    /// <returns>Status 200 if successful, or 500 with error message on failure.</returns>
+    // Receives contact form submission and sends it via email using SMTP.
     [HttpPost]
     public async Task<IActionResult> SendContactMessage([FromBody] ContactMessage contactMessage)
     {

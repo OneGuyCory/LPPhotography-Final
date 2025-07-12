@@ -1,25 +1,15 @@
 ﻿namespace LPPhotographyAPI.DTOs;
 
-/// <summary>
-/// Data Transfer Object for creating a new user (Admin or Client).
-/// Used by administrators to manually register users.
-/// </summary>
+// Data Transfer Object for creating a new user. Admin or Client.
 public class CreateUserDto
 {
-    /// <summary>
-    /// The email address of the user to create.
-    /// This becomes both the email and the username in the system.
-    /// </summary>
+    // The email address of the user to create.
+    // This becomes both the email and the username in the system.
     public string Email { get; set; }
-
-    /// <summary>
-    /// The password assigned to the new user.
-    /// </summary>
+    
+    //The password assigned to the new user.
     public string Password { get; set; }
-
-    /// <summary>
-    /// The role to assign to the user.
-    /// Should be either "Admin" or "Client".
-    /// </summary>
+    
+    // The role to assign to the user. Admin or Client
     public string Role { get; set; }
 }

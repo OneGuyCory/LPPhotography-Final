@@ -13,7 +13,7 @@ export default function HomePage() {
 
     // Load featured photos on mount
     useEffect(() => {
-        fetch("https://localhost:5001/api/photos/featured")
+        fetch("https://lpphotography.azurewebsites.net/api/photos/featured")
             .then((res) => res.json())
             .then(setFeaturedPhotos)
             .catch((err) => console.error("Failed to load featured photos", err));
@@ -22,7 +22,7 @@ export default function HomePage() {
     return (
         <div className="font-sans text-gray-900">
 
-            {/* === Hero Parallax Section === */}
+            {/*Hero Parallax Section */}
             <section
                 className="relative h-[70vh] flex items-center justify-center text-white overflow-hidden"
                 style={{
@@ -46,7 +46,7 @@ export default function HomePage() {
                         Weddings • Portraits • Stories • Streets
                     </p>
                     <a
-                        href="/contact"
+                        href="https://lpphotography.azurewebsites.net/contact"
                         className="inline-block border border-white text-white px-6 py-2 rounded-full text-sm tracking-widest hover:bg-white hover:text-black transition"
                     >
                         Book a Session
@@ -54,7 +54,7 @@ export default function HomePage() {
                 </div>
             </section>
 
-            {/* === Featured Work Section === */}
+            {/* Featured Work Section */}
             <section id="galleries" className="p-8 bg-[#ebe3d2]">
                 <h3 className="text-3xl font-bold text-center mb-6">Featured Work</h3>
 
@@ -83,13 +83,13 @@ export default function HomePage() {
                 )}
             </section>
 
-            {/* === Parallax Divider Section === */}
+            {/* Parallax Divider Section */}
             <section
                 className="h-[60vh] bg-fixed bg-center bg-cover"
                 style={{ backgroundImage: `url('sunflowerfield.jpg')` }}
             />
 
-            {/* === Pricing Section === */}
+            {/* Pricing Section */}
             <section id="pricing" className="bg-[#ebe3d2] p-8">
                 <h3 className="text-3xl font-bold text-center mb-8">Pricing</h3>
 
@@ -144,7 +144,7 @@ export default function HomePage() {
                 </div>
             </section>
 
-            {/* === Parallax Divider Section === */}
+            {/* Parallax Divider Section */}
             <section
                 className="h-[60vh] bg-fixed bg-center bg-cover"
                 style={{ backgroundImage: `url('graffiti2.jpg')` }}
@@ -155,7 +155,7 @@ export default function HomePage() {
                 <h3 className="text-2xl font-bold mb-4">Let's Work Together</h3>
                 <p className="mb-4">Have questions or want to book a shoot? Reach out!</p>
                 <a
-                    href="/contact"
+                    href="https://lpphotography.azurewebsites.net/contact"
                     className="bg-black text-white px-6 py-3 rounded hover:bg-gray-800 transition"
                 >
                     Contact Me

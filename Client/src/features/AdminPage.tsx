@@ -64,12 +64,12 @@ export default function AdminPage() {
 
     // 📥 Fetch galleries and users on load
     useEffect(() => {
-        fetch("https://localhost:5001/api/galleries/all", { credentials: "include" })
+        fetch("https://lpphotography.azurewebsites.net/api/galleries/all", { credentials: "include" })
             .then((res) => res.json())
             .then(setGalleries)
             .catch(console.error);
 
-        fetch("https://localhost:5001/api/users/all", { credentials: "include" })
+        fetch("https://lpphotography.azurewebsites.net/api/users/all", { credentials: "include" })
             .then((res) => res.json())
             .then(setUsers)
             .catch(console.error);
@@ -78,7 +78,7 @@ export default function AdminPage() {
     // 📷 Fetch photos for selected gallery
     useEffect(() => {
         if (selectedGalleryId) {
-            fetch(`https://localhost:5001/api/galleries/${selectedGalleryId}/photos`)
+            fetch(`https://lpphotography.azurewebsites.net/api/galleries/${selectedGalleryId}/photos`)
                 .then((res) => res.json())
                 .then(setPhotos);
         } else {
@@ -121,7 +121,7 @@ export default function AdminPage() {
             galleryId: selectedGalleryId,
         };
 
-        fetch("https://localhost:5001/api/photos", {
+        fetch("https://lpphotography.azurewebsites.net/api/photos", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             credentials: "include",
@@ -148,7 +148,7 @@ export default function AdminPage() {
             isFeatured: editIsFeatured,
         };
 
-        fetch(`https://localhost:5001/api/photos/${photoId}`, {
+        fetch(`https://lpphotography.azurewebsites.net/api/photos/${photoId}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             credentials: "include",
@@ -166,19 +166,19 @@ export default function AdminPage() {
             .catch(() => alert("Failed to update photo"));
     };
 
-    // ❌ Delete a photo
+    //  Delete a photo
     const handleDeletePhoto = (photoId: string) => {
-        fetch(`https://localhost:5001/api/photos/${photoId}`, {
+        fetch(`https://lpphotography.azurewebsites.net/api/photos/${photoId}`, {
             method: "DELETE",
             credentials: "include",
         }).then(() => setPhotos((prev) => prev.filter((p) => p.id !== photoId)));
     };
 
-    // ❌ Delete a gallery
+    //  Delete a gallery
     const handleDeleteGallery = (galleryId: string) => {
         if (!window.confirm("Delete this gallery and all its photos?")) return;
 
-        fetch(`https://localhost:5001/api/galleries/${galleryId}`, {
+        fetch(`https://lpphotography.azurewebsites.net/api/galleries/${galleryId}`, {
             method: "DELETE",
             credentials: "include",
         }).then(() => {
@@ -190,7 +190,7 @@ export default function AdminPage() {
         });
     };
 
-    // ➕ Create new gallery (public or private)
+    //  Create new gallery (public or private)
     const handleCreateGallery = () => {
         const newGallery = {
             title: newGalleryTitle,
@@ -200,7 +200,7 @@ export default function AdminPage() {
             category: "Custom",
         };
 
-        fetch("https://localhost:5001/api/galleries", {
+        fetch("https://lpphotography.azurewebsites.net/api/galleries", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             credentials: "include",
@@ -216,9 +216,9 @@ export default function AdminPage() {
             });
     };
 
-    // ⭐ Set a cover image for a gallery
+    //  Set a cover image for a gallery
     const handleSetCover = (photoUrl: string) => {
-        fetch(`https://localhost:5001/api/galleries/${selectedGalleryId}/cover`, {
+        fetch(`https://lpphotography.azurewebsites.net/api/galleries/${selectedGalleryId}/cover`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             credentials: "include",
@@ -229,7 +229,7 @@ export default function AdminPage() {
         });
     };
 
-    // ➕ Register a new admin or client user
+    //  Register a new admin or client user
     const handleCreateUser = () => {
         const endpoint = newUserRole === "Client" ? "register-client" : "register";
         const payload =
@@ -237,7 +237,7 @@ export default function AdminPage() {
                 ? { email: newUserEmail, password: newUserPassword, accessCode }
                 : { email: newUserEmail, password: newUserPassword, role: "Admin" };
 
-        fetch(`https://localhost:5001/api/users/${endpoint}`, {
+        fetch(`https://lpphotography.azurewebsites.net/api/users/${endpoint}`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             credentials: "include",
@@ -245,7 +245,7 @@ export default function AdminPage() {
         })
             .then((res) => {
                 if (!res.ok) throw new Error("User creation failed");
-                return fetch("https://localhost:5001/api/users/all", { credentials: "include" });
+                return fetch("https://lpphotography.azurewebsites.net/api/users/all", { credentials: "include" });
             })
             .then((res) => res.json())
             .then((updatedUsers) => {
@@ -257,10 +257,10 @@ export default function AdminPage() {
             .catch(() => alert("Failed to create user"));
     };
 
-    // ❌ Delete a user by ID
+    //  Delete a user by ID
     const handleDeleteUser = (userId: string) => {
         if (!window.confirm("Delete this user?")) return;
-        fetch(`https://localhost:5001/api/users/${userId}`, {
+        fetch(`https://lpphotography.azurewebsites.net/api/users/${userId}`, {
             method: "DELETE",
             credentials: "include",
         })

@@ -1,34 +1,21 @@
 ﻿namespace LPPhotographyAPI.DTOs;
 
-/// <summary>
-/// DTO used for updating photo metadata. 
-/// Sent by admin users when editing a photo's details such as caption, URL, or gallery assignment.
-/// </summary>
+// DTO used for updating photo metadata
 public class PhotoUpdateDto
 {
-    /// <summary>
-    /// Unique identifier of the photo to update.
-    /// </summary>
+    // Unique identifier of the photo to update
     public Guid Id { get; set; }
-
-    /// <summary>
-    /// The updated Cloudinary (or other external service) URL of the photo.
-    /// </summary>
+    
+    // The updated Cloudinary (or other external service) URL of the photo
     public string Url { get; set; } = "";
-
-    /// <summary>
-    /// The updated caption or description for the photo.
-    /// </summary>
+    
+    // The updated caption or description for the photo
     public string Caption { get; set; } = "";
-
-    /// <summary>
-    /// The ID of the gallery to which this photo is (re)assigned.
-    /// </summary>
+    
+    // The ID of the gallery to which this photo is (re)assigned
     public Guid GalleryId { get; set; }
-
-    /// <summary>
-    /// Flag to indicate whether the photo should be marked as featured.
-    /// Featured photos can be shown on the homepage or special gallery sections.
-    /// </summary>
+    
+    // Flag to indicate whether the photo should be marked as featured
+    // Featured photos can be shown on the homepage
     public bool IsFeatured { get; set; } = false;
 }

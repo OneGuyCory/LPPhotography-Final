@@ -1,8 +1,6 @@
-﻿// Footer.tsx
+﻿import React from "react";
 
-import React from "react";
-
-// 📌 Footer component with gradient background and Facebook link
+// Footer component with gradient background and Facebook link
 const Footer: React.FC = () => {
     return (
         <footer

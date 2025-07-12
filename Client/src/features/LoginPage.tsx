@@ -3,15 +3,15 @@
 export default function LoginPage() {
     const [isAdmin, setIsAdmin] = useState(true);
 
-    // === ADMIN LOGIN STATE ===
+    // =ADMIN LOGIN STATE 
     const [adminEmail, setAdminEmail] = useState("");
     const [adminPassword, setAdminPassword] = useState("");
 
-    // === CLIENT LOGIN STATE ===
+    // CLIENT LOGIN STATE
     const [clientEmail, setClientEmail] = useState("");
     const [accessCode, setAccessCode] = useState("");
 
-    // === TOGGLE VIEW AND RESET ===
+    // TOGGLE VIEW AND RESET
     const handleToggle = (admin: boolean) => {
         setIsAdmin(admin);
         // Clear both forms on toggle
@@ -21,11 +21,11 @@ export default function LoginPage() {
         setAccessCode("");
     };
 
-    // === HANDLER: ADMIN LOGIN ===
+    //  HANDLER: ADMIN LOGIN
     const handleAdminLogin = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            const res = await fetch("https://localhost:5001/api/users/login", {
+            const res = await fetch("https://lpphotography.azurewebsites.net/api/users/login", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 credentials: "include",
@@ -48,11 +48,11 @@ export default function LoginPage() {
         }
     };
 
-    // === HANDLER: CLIENT LOGIN ===
+    // HANDLER: CLIENT LOGIN
     const handleClientLogin = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            const res = await fetch("https://localhost:5001/api/users/login-client", {
+            const res = await fetch("https://lpphotography.azurewebsites.net/api/users/login-client", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 credentials: "include",
@@ -82,7 +82,7 @@ export default function LoginPage() {
                     {isAdmin ? "Admin Login" : "Client Access"}
                 </h2>
 
-                {/* === Toggle Buttons === */}
+                {/* Toggle Buttons */}
                 <div className="flex justify-center mb-6 space-x-4">
                     <button
                         onClick={() => handleToggle(true)}
@@ -100,7 +100,7 @@ export default function LoginPage() {
                     </button>
                 </div>
 
-                {/* === ADMIN LOGIN FORM === */}
+                {/*  ADMIN LOGIN FORM*/}
                 {isAdmin && (
                     <form onSubmit={handleAdminLogin} className="space-y-4">
                         <input
@@ -128,7 +128,7 @@ export default function LoginPage() {
                     </form>
                 )}
 
-                {/* === CLIENT LOGIN FORM === */}
+                {/* CLIENT LOGIN FORM */}
                 {!isAdmin && (
                     <form onSubmit={handleClientLogin} className="space-y-4">
                         <input

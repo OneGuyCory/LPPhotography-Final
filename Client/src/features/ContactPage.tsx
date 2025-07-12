@@ -9,7 +9,7 @@ interface ContactFormData {
 }
 
 const ContactPage: React.FC = () => {
-    // === State to manage form inputs ===
+    //  State to manage form inputs 
     const [formData, setFormData] = useState<ContactFormData>({
         name: "",
         email: "",
@@ -17,7 +17,7 @@ const ContactPage: React.FC = () => {
         message: ""
     });
 
-    // === Handles input changes (text, textarea, and select fields) ===
+    //  Handles input changes (text, textarea, and select fields) 
     const handleChange = (
         e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
     ) => {
@@ -25,12 +25,12 @@ const ContactPage: React.FC = () => {
         setFormData(prev => ({ ...prev, [name]: value }));
     };
 
-    // === Handles form submission ===
+    //  Handles form submission
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         // 📤 Send contact form to backend API
-        fetch("https://localhost:5001/api/ContactMessage", {
+        fetch("https://lpphotography.azurewebsites.net/api/ContactMessage", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(formData),
@@ -54,7 +54,7 @@ const ContactPage: React.FC = () => {
         <div className=" bg-[#ebe3d2] max-w-3xl mx-auto p-6 font-sans text-gray-900">
             <h2 className="text-3xl font-bold mb-6 text-center">Contact Me</h2>
 
-            {/* === Contact Form === */}
+            {/* Contact Form */}
             <form onSubmit={handleSubmit} className="space-y-4 bg-white p-6 rounded shadow-md">
 
                 {/* Name Field */}

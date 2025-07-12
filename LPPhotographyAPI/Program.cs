@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Authentication.Cookies; // Cookie authentication
 var builder = WebApplication.CreateBuilder(args);
 
 // Get the connection string from appsettings.json (MySQL in this case)
-var connectionString = builder.Configuration.GetConnectionString("MySql");
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
 // Specify the version of MySQL server being used
 var serverVersion = new MySqlServerVersion(new Version(8, 0, 34));
@@ -59,6 +59,10 @@ builder.Services.AddIdentityApiEndpoints<SiteUser>(opt =>
 // --------------------------
 var app = builder.Build();
 
+app.UseDefaultFiles();
+app.UseStaticFiles();
+
+
 // --------------------------
 // Configure the HTTP request pipeline
 // --------------------------
@@ -67,7 +71,7 @@ var app = builder.Build();
 app.UseCors(x => x
     .AllowAnyHeader()
     .AllowAnyMethod()
-    .WithOrigins("http://localhost:3000", "https://localhost:3000")
+    .WithOrigins("http://localhost:3000", "https://localhost:3000", "https://lpphotography.azurewebsites.net")
     .AllowCredentials());
 
 // Enable authentication and authorization middlewares
@@ -76,6 +80,7 @@ app.UseAuthorization();
 
 // Map controller endpoints (e.g. /api/users)
 app.MapControllers();
+app.MapFallbackToFile("index.html");
 
 // Map Identity endpoints (like login, register) under /api prefix
 app.MapGroup("api").MapIdentityApi<SiteUser>();
@@ -92,6 +97,9 @@ try
 {
     // Run EF Core migrations to ensure DB is up-to-date
     var context = services.GetRequiredService<LpPhotoDbContext>();
+    var logger = services.GetRequiredService<ILogger<Program>>();
+    logger.LogInformation("Connection string in Azure: {conn}", connectionString);
+
     await context.Database.MigrateAsync();
 
     // Seed roles and optionally an initial admin user
