@@ -1,6 +1,6 @@
 ﻿import { useEffect, useState } from "react";
 
-// === Interfaces for gallery and photo ===
+// Interfaces for gallery and photo
 interface Gallery {
     id: string;
     title: string;
@@ -23,13 +23,13 @@ export default function ClientGallery() {
     useEffect(() => {
         const role = localStorage.getItem("userRole");
 
-        // 🚫 Redirect non-clients to login
+        // Redirect non-clients to login
         if (role !== "Client") {
             window.location.href = "/login";
             return;
         }
 
-        // 📥 Fetch gallery for authenticated client
+        // Fetch gallery for authenticated client
         fetch("https://lpphotography.azurewebsites.net/api/galleries/client", {
             method: "GET",
             credentials: "include", // send cookies
@@ -84,7 +84,7 @@ export default function ClientGallery() {
                             </a>
                         </div>
 
-                        {/* 📝 Caption (optional) */}
+                        {/* Caption (optional) */}
                         {photo.caption && (
                             <div className="p-2 bg-white text-sm text-center">
                                 {photo.caption}
@@ -107,14 +107,14 @@ export default function ClientGallery() {
                             &times;
                         </button>
 
-                        {/* 🖼 Fullscreen Image */}
+                        {/* Fullscreen Image */}
                         <img
                             src={selectedPhoto.url}
                             alt={selectedPhoto.caption || "Full View"}
                             className="w-full max-h-[80vh] object-contain rounded shadow-lg"
                         />
 
-                        {/* ⬇ Download + Close */}
+                        {/* Download + Close */}
                         <div className="flex justify-center gap-6 mt-4">
                             <a
                                 href={selectedPhoto.url.replace(
@@ -134,7 +134,7 @@ export default function ClientGallery() {
                             </button>
                         </div>
 
-                        {/* 📝 Optional caption below modal */}
+                        {/* Optional caption below modal */}
                         {selectedPhoto.caption && (
                             <p className="text-white mt-4 text-center text-lg">
                                 {selectedPhoto.caption}

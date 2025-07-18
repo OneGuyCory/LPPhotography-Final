@@ -1,6 +1,4 @@
-﻿// AdminPage.tsx
-
-import { useEffect, useState } from "react";
+﻿import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 
 // Define shape of a gallery
@@ -27,34 +25,34 @@ interface User {
 export default function AdminPage() {
     const navigate = useNavigate();
 
-    // 📦 Admin state variables
+    // Admin state variables
     const [galleries, setGalleries] = useState<Gallery[]>([]);
     const [selectedGalleryId, setSelectedGalleryId] = useState("");
     const [photos, setPhotos] = useState<Photo[]>([]);
 
-    // 📤 Upload and form inputs
+    // Upload and form inputs
     const [uploading, setUploading] = useState(false);
     const [uploadUrl, setUploadUrl] = useState("");
     const [caption, setCaption] = useState("");
 
-    // 🖊️ Photo editing state
+    //  Photo editing state
     const [editingPhotoId, setEditingPhotoId] = useState<string | null>(null);
     const [editCaption, setEditCaption] = useState("");
     const [editIsFeatured, setEditIsFeatured] = useState(false);
 
-    // 🆕 New gallery form
+    // New gallery form
     const [newGalleryTitle, setNewGalleryTitle] = useState("");
     const [isPrivate, setIsPrivate] = useState(false);
     const [clientEmail, setClientEmail] = useState("");
     const [accessCode, setAccessCode] = useState("");
 
-    // 👤 User management
+    // User management
     const [users, setUsers] = useState<User[]>([]);
     const [newUserEmail, setNewUserEmail] = useState("");
     const [newUserPassword, setNewUserPassword] = useState("");
     const [newUserRole, setNewUserRole] = useState("Client");
 
-    // 🔐 Redirect non-admins
+    // Redirect non-admins
     useEffect(() => {
         const role = localStorage.getItem("userRole");
         if (role !== "Admin") {
@@ -62,7 +60,7 @@ export default function AdminPage() {
         }
     }, [navigate]);
 
-    // 📥 Fetch galleries and users on load
+    // Fetch galleries and users on load
     useEffect(() => {
         fetch("https://lpphotography.azurewebsites.net/api/galleries/all", { credentials: "include" })
             .then((res) => res.json())
@@ -75,7 +73,7 @@ export default function AdminPage() {
             .catch(console.error);
     }, []);
 
-    // 📷 Fetch photos for selected gallery
+    // Fetch photos for selected gallery
     useEffect(() => {
         if (selectedGalleryId) {
             fetch(`https://lpphotography.azurewebsites.net/api/galleries/${selectedGalleryId}/photos`)
@@ -86,7 +84,7 @@ export default function AdminPage() {
         }
     }, [selectedGalleryId]);
 
-    // 🌩️ Upload image to Cloudinary
+    // Upload image to Cloudinary
     const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (!file) return;
@@ -111,7 +109,7 @@ export default function AdminPage() {
         }
     };
 
-    // 💾 Save uploaded image as photo in backend
+    // Save uploaded image as photo in backend
     const handleSavePhoto = () => {
         if (!uploadUrl) return;
 
@@ -135,7 +133,7 @@ export default function AdminPage() {
             });
     };
 
-    // ✏️ Update existing photo (caption + isFeatured)
+    //  Update existing photo (caption + isFeatured)
     const handleUpdatePhoto = (photoId: string) => {
         const existing = photos.find((p) => p.id === photoId);
         if (!existing) return;

@@ -3,7 +3,7 @@
 export default function LoginPage() {
     const [isAdmin, setIsAdmin] = useState(true);
 
-    // =ADMIN LOGIN STATE 
+    // ADMIN LOGIN STATE 
     const [adminEmail, setAdminEmail] = useState("");
     const [adminPassword, setAdminPassword] = useState("");
 

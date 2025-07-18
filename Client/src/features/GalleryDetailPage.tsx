@@ -1,7 +1,7 @@
 ﻿import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router";
 
-// === Defines a Photo structure ===
+// Defines a Photo structure
 interface Photo {
     id: string;
     url: string;
@@ -36,6 +36,8 @@ const GalleryDetailPage: React.FC = () => {
             });
     }, [id]);
 
+    // @ts-ignore
+    // @ts-ignore
     return (
         <div className="max-w-6xl mx-auto p-6 font-sans text-gray-900">
             {/* Header Section */}
@@ -52,19 +54,20 @@ const GalleryDetailPage: React.FC = () => {
             ) : photos.length === 0 ? (
                 <p className="text-center text-gray-600">No photos available in this gallery.</p>
             ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                <div className="columns-1 sm:columns-2 md:columns-3 gap-2">
                     {photos.map((photo) => (
-                        <div key={photo.id} className="rounded overflow-hidden shadow">
+                        <div key={photo.id} className="bg-white rounded shadow overflow-hidden">
                             {/* Thumbnail Clickable Image */}
+                            
                             <img
                                 src={photo.url}
                                 alt={photo.caption || "Photo"}
                                 onClick={() => setSelectedPhoto(photo)}
-                                className="cursor-pointer w-full h-48 object-cover rounded hover:opacity-80 transition"
+                                className="w-full h-auto object-contain cursor-pointer hover:opacity-80 transition"
                             />
-
-                            {/* Download Button */}
-                            <div className="flex justify-center gap-4 p-2 bg-white">
+                            
+                            {/* Download Button commented out until download decision with client made */}
+                            {/*<div className="flex justify-center gap-4 p-2 bg-white">
                                 <a
                                     href={photo.url.replace("/upload/", "/upload/fl_attachment/")}
                                     download
@@ -72,11 +75,11 @@ const GalleryDetailPage: React.FC = () => {
                                 >
                                     Download
                                 </a>
-                            </div>
+                            </div>*/}
 
                             {/* Optional Caption */}
                             {photo.caption && (
-                                <div className="p-2 bg-white text-sm text-center">
+                                <div className="text-center text-sm mt-1 px-2 pb-2 text-gray-600">
                                     {photo.caption}
                                 </div>
                             )}
@@ -107,13 +110,13 @@ const GalleryDetailPage: React.FC = () => {
 
                         {/* Download + Close Actions */}
                         <div className="flex justify-center gap-6 mt-4">
-                            <a
+                            {/*<a
                                 href={selectedPhoto.url.replace("/upload/", "/upload/fl_attachment/")}
                                 download
                                 className="text-white bg-indigo-600 px-4 py-2 rounded hover:bg-indigo-700 transition text-sm"
                             >
                                 Download
-                            </a>
+                            </a>*/}
                             <button
                                 onClick={() => setSelectedPhoto(null)}
                                 className="text-sm text-white underline hover:text-red-300"

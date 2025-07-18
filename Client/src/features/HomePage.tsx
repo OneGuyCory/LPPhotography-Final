@@ -86,7 +86,7 @@ export default function HomePage() {
             {/* Parallax Divider Section */}
             <section
                 className="h-[60vh] bg-fixed bg-center bg-cover"
-                style={{ backgroundImage: `url('sunflowerfield.jpg')` }}
+                style={{ backgroundImage: `url('carclouds.jpg')` }}
             />
 
             {/* Pricing Section */}
@@ -105,7 +105,7 @@ export default function HomePage() {
                         <p className="text-center text-white mb-4">$150</p>
                         <ul className="text-sm text-white space-y-2">
                             <li>✔ 1 hour shoot</li>
-                            <li>✔ 10 edited photos</li>
+                            <li>✔ 25+ edited photos</li>
                             <li>✔ Online gallery delivery</li>
                         </ul>
                     </div>
@@ -120,9 +120,9 @@ export default function HomePage() {
                         <h4 className="text-xl font-semibold mb-2 text-center text-white">Wedding Package</h4>
                         <p className="text-center text-white mb-4">$1200</p>
                         <ul className="text-sm text-white space-y-2">
-                            <li>✔ 8 hours coverage</li>
-                            <li>✔ 150+ edited photos</li>
                             <li>✔ Full-day event documentation</li>
+                            <li>✔ 150+ edited photos</li>
+                            <li>✔ Online Gallery Delivery</li>
                         </ul>
                     </div>
 
@@ -137,7 +137,7 @@ export default function HomePage() {
                         <p className="text-center text-white mb-4">$300</p>
                         <ul className="text-sm text-white space-y-2">
                             <li>✔ 3 hours coverage</li>
-                            <li>✔ 50 edited photos</li>
+                            <li>✔ 100+ edited photos</li>
                             <li>✔ Great for parties & ceremonies</li>
                         </ul>
                     </div>
@@ -147,7 +147,7 @@ export default function HomePage() {
             {/* Parallax Divider Section */}
             <section
                 className="h-[60vh] bg-fixed bg-center bg-cover"
-                style={{ backgroundImage: `url('graffiti2.jpg')` }}
+                style={{ backgroundImage: `url('CarMirror.jpg')` }}
             />
 
             {/* === Contact CTA Section === */}

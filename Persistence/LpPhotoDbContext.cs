@@ -13,18 +13,19 @@ public class LpPhotoDbContext : IdentityDbContext<SiteUser>
 
     public DbSet<Gallery> Galleries { get; set; } = null!;
     public DbSet<Photo> Photos { get; set; } = null!;
-    // You do not need to declare DbSet<SiteUser> unless you're doing custom queries on users.
-    // The IdentityDbContext already gives you access via base.Users
+
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
 
         // API relationships
+        // one photo -> gallery
+        // one gallery -> many photos
         builder.Entity<Photo>()
             .HasOne(p => p.Gallery)
             .WithMany(g => g.Photos)
             .HasForeignKey(p => p.GalleryId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.Cascade); // if gallery deleted, photos get deleted as well
     }
 }
